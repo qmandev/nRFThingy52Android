@@ -1049,6 +1049,38 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   hardware later.
 
 ### Phase 5 — Scanner screen
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added `ScannerViewModel` (+`DiscoveredThingyUi`/
+> `ScannerUiState`), `ScannerScreen`, `ThingyRow`, the base `res/values/strings.xml` (all 29 keys from
+> §8.2, values verbatim), the four `rssi_1..4` vector drawables, and the `NavHost` with the `"scanner"`
+> and `"detail/{deviceAddress}"` routes. 36 unit tests green (7 new `ScannerViewModelHelperTest`);
+> `./gradlew build` green, lint 0 errors.
+>
+> **Verified on the Pixel 9 emulator.** `mock`: Nordic-blue `LargeTopAppBar` with white title and
+> white scanning spinner, "Nearby Devices" header, the `"Thingy52 Mock"` row showing a 3-of-4-bar RSSI
+> icon (correct for the fake's −45 dBm → MEDIUM); tapping the row navigates to the placeholder detail
+> route showing `AA:BB:CC:DD:EE:FF`, and Back returns to the populated scanner. `prod`: the empty state
+> renders with the official bluetooth_searching glyph and all four instruction text blocks verbatim.
+> A useful side-effect of that `prod` run — the scanning spinner was active, so
+> `AndroidBleScanner.startScan()` genuinely succeeded against the real `BluetoothLeScanner` on the
+> emulator's simulated adapter (it just found no Thingy), which exercises more of the Phase 4 transport
+> than "wiring only".
+>
+> **§10.7 and §10.8 resolved.** (1) RSSI icons: the four-tier bar-chart glyph is **recreated as vector
+> drawables** (`rssi_1..4`), ascending bars with inactive bars at 25% `fillAlpha` so a Compose `Icon`
+> tint still colors them — not a Material Symbols substitute. (2) Icon source: `androidx.compose.
+> material.icons` is **not** on the classpath (Material Icons is decoupled from material3, and
+> `material-icons-extended` is deprecated and multi-megabyte). Instead the needed glyphs are **vendored
+> as vector drawables converted from the official google/material-design-icons SVGs** — exact Material
+> artwork, no dependency, ~1 KB each. Phase 5 needs only `ic_scanning`; the Phase 6/7 glyphs
+> (`ic_lightbulb`, `ic_radio_button`, `ic_temperature`, `ic_humidity`, `ic_pressure`, `ic_air_quality`,
+> `ic_orientation`, `ic_steps`, `ic_heading`, `ic_tap`) were generated in the same pass and are ready.
+>
+> Other notes: `ScannerViewModel.advertisedName`/`shouldRefreshRow` are `companion object` functions so
+> they port the iOS `ScannerModel` statics 1:1 and stay directly unit-testable; `advertisedName` also
+> treats an **empty** name as missing, since Android can report `""` where iOS reports nil. The
+> permission request is skipped entirely on the `mock` flavor (the fake needs none), and `onStartScan`
+> is gated on the grant so a denial can't start a scan that would silently fail.
 - `ScannerViewModel` (owns `BleScanner`, dedupe/throttle per §4 point 8, exposes
   `StateFlow<ScannerUiState>`).
 - `ScannerScreen`, `ThingyRow` composables (§6.1), empty state, RSSI icon assets (§10 item 7

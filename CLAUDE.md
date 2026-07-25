@@ -57,6 +57,17 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
 - **Detail ViewModel** (`ui/detail/`, Phase 3): `ThingyConnectionViewModel` +
   `ThingyDetailUiState`/`ConnectionState` — the iOS `ThingyConnection` port. 16 unit tests
   (`ThingyConnectionViewModelTest` 10, `FakeThingyTransportTest` 6) run on the fake with no device.
+- **Scanner screen** (`ui/scanner/`, Phase 5): `ScannerViewModel` (dedupe by address + 1 s row
+  throttle, ported from iOS `handleDiscovery`), `ScannerScreen` (Nordic-blue `LargeTopAppBar`,
+  scanning spinner, `ContentUnavailableView`-equivalent empty state), `ThingyRow`. `MainActivity`
+  hosts the `NavHost` with `"scanner"` and `"detail/{deviceAddress}"`; the detail route is a Phase 6
+  placeholder.
+- **Strings + icons**: `res/values/strings.xml` holds all 29 keys from plan §8.2 with values verbatim
+  from the iOS `Localizable.strings` (the other 15 locales land in Phase 8). Icons are **vendored
+  vector drawables**, not a Material Icons dependency — `rssi_1..4` are hand-drawn four-tier bars;
+  the rest (`ic_scanning`, `ic_lightbulb`, `ic_temperature`, …) are converted from the official
+  google/material-design-icons SVGs. `androidx.compose.material.icons` is deliberately not a
+  dependency (decoupled from material3; `material-icons-extended` is deprecated and huge).
 - Java/Kotlin target raised to **17**; BLE permissions + `bluetooth_le` feature added to the manifest.
 
 Two non-obvious gotchas discovered while doing Phase 0 (both baked into the build files now):
@@ -157,13 +168,14 @@ recommendation for each.
 
 ## Build order
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–4 are done and
-verified** (full `./gradlew build` green; 29 JVM unit tests; both flavors launch on the emulator with
-the correct transport wired). Remaining: Phase 5 scanner screen → Phase 6 detail (LED/button) →
-Phase 7 sensor dashboards → Phase 8 fake-transport integration + Compose UI tests → Phase 9 hardware
-verification → Phase 10 docs. Build screens against the `mock` flavor: both transports satisfy the
-same interfaces, so nothing in Phases 5–7 needs hardware. **No real GATT traffic has run yet** — the
-emulator has no BLE radio, so `ThingyGatt` is verified only by construction until Phase 9.
+Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–5 are done and
+verified** (full `./gradlew build` green; 36 JVM unit tests; the scanner lists the mock device and
+navigates on tap, and the empty state renders, both confirmed on the emulator). Remaining: Phase 6
+detail (LED/button) → Phase 7 sensor dashboards → Phase 8 fake-transport integration + Compose UI
+tests → Phase 9 hardware verification → Phase 10 docs. Build screens against the `mock` flavor: both
+transports satisfy the same interfaces, so nothing in Phases 6–7 needs hardware. **No real GATT
+traffic has run yet** — scanning has been exercised against the real API on the emulator's simulated
+adapter, but `ThingyGatt`'s connect/notify/read pipeline is unverified until the Phase 9 hardware pass.
 
 Phase 10 calls for rewriting this CLAUDE.md once real code exists, to document the architecture
 decisions actually made (especially the §10 resolutions) — replace this starter-state version at

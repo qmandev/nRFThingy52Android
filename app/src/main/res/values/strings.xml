@@ -1,3 +1,51 @@
 <resources>
     <string name="app_name">nRFThingy52Android</string>
+
+    <!-- Values are the exact English text from the iOS en.lproj/Localizable.strings (plan §8.2).
+         Resource names are new (the iOS keys are the literal display text); the values must not be
+         paraphrased. The 15 other locales are populated in Phase 8. -->
+
+    <!-- Scanner -->
+    <string name="scanner_title">Thingy52</string>
+    <string name="nearby_devices">Nearby Devices</string>
+    <string name="scanning">Scanning...</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="cant_see_your_thingy">CAN\'T SEE YOUR THINGY?</string>
+    <string name="empty_state_step_1">1. Make sure it\'s switched on.</string>
+    <string name="empty_state_step_1_detail">Toggle the switch next to the micro USB port to switch it on.</string>
+    <string name="empty_state_step_2">2. Make sure the coin cell battery has power.</string>
+    <string name="empty_state_step_2_detail">If not, connect it to a PC or a charger using a micro USB cable. Coin cell battery is on the bottom side of the dev kit.</string>
+
+    <!-- Detail: LED &amp; button -->
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="pressed">PRESSED</string>
+    <string name="released">RELEASED</string>
+    <string name="reading">Reading...</string>
+    <string name="disconnected">DISCONNECTED</string>
+    <string name="led">LED</string>
+    <string name="button">Button</string>
+    <string name="led_section_footer">Toggling the switch will cause the LED on the Thingy to turn ON or OFF.</string>
+    <string name="button_section_footer">Pressing and releasing the button on the Thingy will update the state here.</string>
+
+    <!-- Detail: environment dashboard -->
+    <string name="environment">Environment</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="air_quality">Air Quality</string>
+    <string name="environment_section_footer">Live sensor readings streamed from the Thingy.</string>
+
+    <!-- Detail: motion dashboard -->
+    <string name="motion">Motion</string>
+    <string name="orientation">Orientation</string>
+    <string name="steps">Steps</string>
+    <string name="heading">Heading</string>
+    <string name="last_tap">Last Tap</string>
+    <string name="motion_section_footer">Orientation, steps, heading, and taps reported by the Thingy\'s motion sensors.</string>
+
+    <!-- Content descriptions. No iOS counterpart: SwiftUI derives accessibility labels from Text,
+         while Compose needs them stated for TalkBack. -->
+    <string name="cd_signal_strength">Signal strength: %1$d of 4</string>
+    <string name="cd_scanning">Scanning for devices</string>
 </resources>
