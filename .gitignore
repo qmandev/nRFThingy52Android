@@ -1,0 +1,42 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+*.dex
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle
+.gradle/
+build/
+/captures
+
+# Local configuration (SDK path, etc.) — machine-specific, never commit
+local.properties
+
+# Native build
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/
+
+# Signing — never commit keystores or their credentials
+*.jks
+*.keystore
+keystore.properties
+
+# Android Studio / IntelliJ — IDE state is per-developer, not project config
+*.iml
+.idea/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
