@@ -1,9 +1,14 @@
 package com.armstrongmobile.nrfthingy52android.ui.detail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.armstrongmobile.nrfthingy52android.ble.ThingyController
 import com.armstrongmobile.nrfthingy52android.ble.ThingyGattEvent
+import com.armstrongmobile.nrfthingy52android.ble.UnavailableThingyController
+import com.armstrongmobile.nrfthingy52android.di.ThingyRepository
 import com.armstrongmobile.nrfthingy52android.domain.EnvironmentReading
 import com.armstrongmobile.nrfthingy52android.domain.MotionReading
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -114,6 +119,23 @@ class ThingyConnectionViewModel(
                 stepDurationSeconds = reading.durationSeconds,
             )
             is MotionReading.Heading -> state.copy(heading = reading.degrees)
+        }
+    }
+
+    companion object {
+        const val ARG_DEVICE_ADDRESS = "deviceAddress"
+
+        // Builds the ViewModel from the navigation argument: the route carries only the MAC address,
+        // so the peripheral is looked up through the repository rather than passed as an object
+        // reference the way iOS's ThingyConnection(peripheral:) receives it (plan §3, §6.1). An
+        // address that can't be resolved yields UnavailableThingyController, which reports
+        // disconnected instead of leaving the screen stuck on "Scanning...".
+        fun factory(repository: ThingyRepository, unknownDeviceName: String) = viewModelFactory {
+            initializer {
+                val address = createSavedStateHandle().get<String>(ARG_DEVICE_ADDRESS).orEmpty()
+                val controller = repository.controllerFor(address) ?: UnavailableThingyController()
+                ThingyConnectionViewModel(controller, unknownDeviceName)
+            }
         }
     }
 }

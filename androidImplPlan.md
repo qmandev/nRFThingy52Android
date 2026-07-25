@@ -1092,6 +1092,41 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   route.
 
 ### Phase 6 — Detail screen: LED & Button
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added `ThingyDetailScreen` (inline Nordic-blue `TopAppBar`,
+> LED and Button sections), `SettingsSection` (the reusable header/Card/footer container standing in
+> for SwiftUI's inset-grouped `Section`), `rememberHeavyImpactHaptic`, and
+> `UnavailableThingyController`. `ThingyConnectionViewModel` gained a `factory(repository,
+> unknownDeviceName)` that reads `deviceAddress` from `SavedStateHandle` and resolves it through
+> `ThingyRepository`, so the nav route's MAC address becomes a controller; the detail route in
+> `MainActivity` now hosts the real screen instead of the placeholder. 42 unit tests green (6 new
+> `DetailStateTextTest`); `./gradlew build` green, lint 0 errors.
+>
+> **Verified on the Pixel 9 emulator (mock flavor).** Tapping the scanner row opens the detail screen
+> titled "Thingy52 Mock" showing LED **OFF** and Button **RELEASED** — i.e. the fake auto-connected and
+> the state is CONNECTED, not stuck on "Scanning...". Toggling the switch round-trips the
+> optimistic-write-then-read-back path: OFF → ON (switch checked, value confirmed by the fake
+> firmware's `LedStateChanged` read-back) → OFF. Back-navigation disposes the screen and re-entering
+> reconnects cleanly (OFF/RELEASED, never DISCONNECTED).
+>
+> **On the §6.2 back-navigation race caution.** A scripted back-then-immediately-tap sequence produced
+> no navigation: the tap was dispatched during the back transition and swallowed before the scanner
+> was interactive. The app stayed in a valid state (scanner, list populated, no crash, no hang), and
+> the same sequence with a 1 s settle reconnects normally — so this was a test-harness artifact, not a
+> defect. It does **not** clear §9's checklist item 8: with real GATT the disconnect/reconnect timing
+> can genuinely race, so it stays on the Phase 9 hardware checklist.
+>
+> **Not verified on device:** (1) the `nordicRed` disconnected switch tint — the mock flavor has no UI
+> affordance to force a mid-session disconnect; it's covered by a Compose preview and by
+> `DetailStateTextTest`, and gets real coverage in the Phase 9 Bluetooth-off check. (2) The button
+> press/release row update and its haptic — the fake's `pressButton()` can't be driven from outside
+> the app process. Both are covered at the unit-test layer today
+> (`ThingyConnectionViewModelTest.buttonStateChangesArePublished`) and belong in the Phase 8 UI suite,
+> which runs in-process and can call `ThingyMocks.controller.pressButton()` directly.
+>
+> Note: `ledStateRes`/`buttonStateRes` are pure `@StringRes` functions rather than logic inside the
+> composable, so the iOS `ledStateText`/`buttonStateText` derivation is unit-testable without a Compose
+> or Android context (`R.string` ids are plain int constants on the JVM).
 - `ThingyConnectionViewModel` (§3, §4 point 10), `ThingyDetailScreen`'s LED and Button sections
   only (§6.2, deferring Environment/Motion sections to Phase 7), disconnected-state red tint,
   connect-on-launch/disconnect-on-dispose lifecycle (§6.2), heavy-impact haptics on button press.
