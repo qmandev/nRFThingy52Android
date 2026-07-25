@@ -1000,6 +1000,41 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   pure JVM unit tests, no Android instrumentation required.
 
 ### Phase 4 — Real BLE transport
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added `ThingyGatt` (Nordic-`BleManager`-backed, the §4
+> points 9–11 pipeline), `AndroidBleScanner` (`BluetoothLeScanner` + `ScanFilter` on the UI service,
+> `SCAN_MODE_LOW_LATENCY`), `BluetoothStateObserver` (`ACTION_STATE_CHANGED` receiver as a Flow),
+> `BlePermissions`/`rememberBlePermissionState` (the §4.4 version-branched runtime flow, requested at
+> first scanner appearance), `ThingyRepository` (address → controller, real + fake), `AppContainer`
+> (the composition root reading `BuildConfig.USE_FAKE_TRANSPORT`), and `ThingyApplication`. Also added
+> `domain/ThingyUserInterface` (§5.1 UI-service UUIDs + LED/button 1-byte codec), which Phase 2 had
+> not covered. `./gradlew build` green (29 unit tests, lint 0 errors); **both flavors verified on the
+> Pixel 9 emulator** — `prod` renders "real transport", `mock` renders "fake transport" (read back via
+> uiautomator), neither crashes. Confirmed the real transport files contain zero references to the
+> fake types (the only `ble.fake` imports are in the DI seam, by design).
+>
+> **Nordic `ble-ktx` 2.11.0 added — no AndroidX version nudges.** Its transitive requests all resolved
+> *downward* to versions already in the project: `androidx.core:core` 1.12.0 → 1.19.0,
+> `androidx.annotation` 1.9.1 → 1.10.0, `kotlinx-coroutines-android` 1.10.2 → 1.11.0, and
+> `kotlin-stdlib` 2.2.20 matched exactly. A before/after diff of the resolved `mockDebugRuntimeClasspath`
+> showed the ble-ktx subtree as the *only* change — so the earlier compileSdk-37 + latest-AndroidX bump
+> did exactly what it was meant to.
+>
+> **Implementation notes.** (1) `BleManager` is **wrapped, not subclassed**: its `isConnected()` is a
+> Java method that doesn't satisfy a Kotlin `val`, and `disconnect()` is `final` returning a
+> `DisconnectRequest`, so both collide with `ThingyController`. `ThingyGatt` therefore delegates to a
+> private `ThingyBleManager` that exposes narrow wrappers over the library's *protected* request
+> builders. (2) `isRequiredServiceSupported()` returns true only when the LED or Button characteristic
+> is present, which makes the library abort the connection — the same outcome as iOS's
+> "supports neither, disconnect" rule. (3) No `requestMtu` call: every payload is ≤ 8 bytes so the
+> default 23-byte MTU suffices (§4.2) — this deliberately diverges from §4 point 2's "call
+> requestMtu(185) as a defensive default", since the parenthetical there concedes MTU 23 is sufficient
+> for this characteristic set, and an unnecessary negotiation adds a failure mode. (4) The fake
+> transport lives in `src/main`, not `src/mock`, so `./gradlew test` compiles the fake for **all**
+> variants; the cost is that `prod` APKs also contain the (unreachable) fake classes until R8 is
+> enabled for release. (5) Hardware verification against a physical Thingy:52 is Phase 9 — the
+> emulator has no BLE radio, so only the wiring, not real GATT traffic, is verified here.
+
 - `ThingyGatt` (real `BluetoothGattCallback` implementation, §4 points 9–11 pipeline), `BleScanner`
   (real `BluetoothLeScanner` wrapper, §4 point 8), a `BluetoothAdapter.ACTION_STATE_CHANGED`
   `BroadcastReceiver` (§4 point 11's power-off path), the GATT operation-serialization queue

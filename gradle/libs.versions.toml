@@ -13,11 +13,16 @@ activityCompose = "1.13.0"
 composeBom = "2026.06.01"
 navigationCompose = "2.9.8"
 lifecycle = "2.11.0"
+nordicBle = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Nordic's own Android BLE library — GATT operation queue, CCCD handling, suspend request semantics
+# (plan §10.5). ble-ktx brings the coroutine API and depends on the core `ble` artifact.
+nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
 
 # Compose — versions are supplied by the BOM, so the BOM-managed artifacts carry no version.ref
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }

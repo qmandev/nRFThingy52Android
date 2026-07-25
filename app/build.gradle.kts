@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.material)
+    implementation(libs.nordic.ble.ktx)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
