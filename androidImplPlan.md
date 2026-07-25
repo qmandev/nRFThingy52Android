@@ -960,6 +960,34 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   `ThingyEnvironment.swift`/`ThingyMotion.swift` are framework-free on iOS).
 
 ### Phase 3 — BLE transport abstraction & fake implementation
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added `ble/` (`ThingyController`, `ThingyGattEvent`,
+> `BleScanner`, `ThingyScanResult`), `ble/fake/` (`FakeThingyController`, `FakeBleScanner`,
+> `ThingyMocks`), and `ui/detail/` (`ThingyConnectionViewModel`, `ThingyDetailUiState`,
+> `ConnectionState`). **29 JVM unit tests green, no instrumentation**: all 10 rows of §9.2's
+> `ThingyConnectionViewModelTest` table (ported with the iOS `makeSUT()` pattern) + 6
+> `FakeThingyTransportTest` + the 12 Phase 2 domain tests + the starter's 1 example test. Full
+> `./gradlew build` green.
+>
+> **Deviation — events flow instead of a `ThingyGattListener` interface.** §3 specifies a listener
+> protocol mirroring iOS's `ThingyDelegate`; §4.1 separately requires callbacks to be converted into
+> plain data events pushed onto a flow, with the ViewModel's single collection point as the
+> concurrency boundary. Rather than ship both (a listener plus a redundant flow), `ThingyController`
+> exposes `events: SharedFlow<ThingyGattEvent>` and the listener interface was **not** created — the
+> sealed `ThingyGattEvent` carries exactly the six `ThingyDelegate` cases. This is the §4.1 design,
+> is thread-safe from a Binder thread by construction, and makes the ViewModel tests deterministic.
+>
+> Other notes: `FakeThingyController` takes an `autoConnect` flag so one class serves both roles iOS
+> splits across two doubles — `false` (default) is the dumb recorder the iOS `ThingyConnectionTests`
+> use, `true` behaves like real firmware for integration/demo. Its `simulate*`/`pressButton`/
+> `releaseButton`/`powerOff`/`disconnectThingy`/`ledIsOn` names are kept from the iOS `ThingyMocks`
+> facade for 1:1 cross-reference, and each `simulate*` encodes then re-parses through the Phase 2
+> codecs so simulated readings exercise the real wire formats. `ThingyConnectionViewModel` takes the
+> controller by constructor (like iOS's `ThingyConnection(peripheral:)`); the
+> `SavedStateHandle`+repository construction arrives with navigation in Phase 5/6. The
+> "Unknown Device" fallback is an injected string, per §3's note that non-Composable call sites have
+> no `Bundle.main` equivalent — Phase 8 wires the localized resource at the construction site.
+
 - `ThingyController`/`ThingyGattListener` interfaces (§3).
 - `FakeThingyController`, `FakeBleScanner`, a `ThingyMocks`-equivalent facade (§9.1) — build this
   **before** the real `ThingyGatt`, mirroring how the iOS project's CoreBluetoothMock integration

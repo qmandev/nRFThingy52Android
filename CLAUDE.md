@@ -46,6 +46,13 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
   `TapDirection`/`ThingyOrientation`/`RssiBucket` enums, and internal LE codec helpers — ported 1:1
   from the iOS source, zero Android deps (only `java.util.UUID` + `kotlin.math`). Unit-tested under
   `app/src/test/.../domain/` (12 tests, fixtures verbatim from the iOS `BLEModelTests.swift`).
+- **Transport seam + fake** (`ble/`, `ble/fake/`, Phase 3): `ThingyController` (exposing
+  `events: SharedFlow<ThingyGattEvent>`) and `BleScanner`/`ThingyScanResult` interfaces, with
+  `FakeThingyController`, `FakeBleScanner`, and the `ThingyMocks` demo facade. The real transport
+  (Phase 4) is the only thing still missing behind this seam.
+- **Detail ViewModel** (`ui/detail/`, Phase 3): `ThingyConnectionViewModel` +
+  `ThingyDetailUiState`/`ConnectionState` — the iOS `ThingyConnection` port. 16 unit tests
+  (`ThingyConnectionViewModelTest` 10, `FakeThingyTransportTest` 6) run on the fake with no device.
 - Java/Kotlin target raised to **17**; BLE permissions + `bluetooth_le` feature added to the manifest.
 
 Two non-obvious gotchas discovered while doing Phase 0 (both baked into the build files now):
@@ -102,14 +109,15 @@ Single-Activity Compose app, MVVM with `ViewModel` + `StateFlow` collected via
 
 - **BLE callbacks arrive off the main thread.** Unlike iOS's CoreBluetooth (which delivers on the
   main queue, letting the iOS models be `@MainActor`), Android's `BluetoothGattCallback`/
-  `ScanCallback` fire on an internal Binder thread. Rule (plan §4.1): `ThingyGatt` (the
-  `BluetoothGattCallback` impl) must never touch Compose state — it converts each callback into a
-  plain event pushed onto a flow, and only the owning `ViewModel`'s `viewModelScope` collection
-  point mutates the `StateFlow` Compose observes. This single collection point is the concurrency
-  boundary that replaces iOS's `@MainActor` isolation; there is no compiler enforcement, so it must
-  be respected by convention.
+  `ScanCallback` fire on an internal Binder thread. Rule (plan §4.1): the transport must never touch
+  Compose state — it converts each callback into a plain `ThingyGattEvent` pushed onto
+  `ThingyController.events`, and the `viewModelScope.launch { controller.events.collect(...) }` in
+  `ThingyConnectionViewModel.init` is the **only** place `uiState` is mutated. That single collection
+  point is the concurrency boundary replacing iOS's `@MainActor` isolation; there is no compiler
+  enforcement, so don't mutate state anywhere else. This is why the seam is an events flow rather
+  than the listener interface plan §3 names — see the §11 Phase 3 status note.
 
-- **Fake-vs-real BLE transport seam.** `ThingyController` + `ThingyGattListener` interfaces are
+- **Fake-vs-real BLE transport seam.** The `ThingyController` + `BleScanner` interfaces are
   implemented by both a real transport and a `FakeThingyController`/`FakeBleScanner` test/demo double.
   The real implementation is backed by **Nordic's `no.nordicsemi.android:ble` / `ble-ktx`** library
   (decision resolved, plan §10.5), not raw `BluetoothGatt` — it provides the GATT operation queue,
@@ -145,13 +153,14 @@ recommendation for each.
 
 ## Build order
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–2 are done and
-verified** (full `./gradlew build` green; `ThingyTheme` renders in nordicBlue in light/dark; the
-`domain/` layer passes 12 unit tests). Remaining:
-Phase 3 transport interfaces + fake → Phase 4 real BLE transport → Phase 5 scanner screen →
-Phase 6 detail (LED/button) → Phase 7 sensor dashboards → Phase 8 fake-transport integration + UI
-tests → Phase 9 hardware verification → Phase 10 docs. Follow this order; later phases depend on the
-fake-transport seam from Phase 3.
+Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–3 are done and
+verified** (full `./gradlew build` green; `ThingyTheme` renders in nordicBlue in light/dark; 29 JVM
+unit tests pass, covering the domain layer, the fake transport, and `ThingyConnectionViewModel`).
+Remaining: Phase 4 real BLE transport (Nordic `ble-ktx` behind the existing `ThingyController`/
+`BleScanner` interfaces) → Phase 5 scanner screen → Phase 6 detail (LED/button) → Phase 7 sensor
+dashboards → Phase 8 fake-transport integration + Compose UI tests → Phase 9 hardware verification →
+Phase 10 docs. The fake-transport seam is in place, so Phases 5–7 can be built and tested without
+hardware or the real transport.
 
 Phase 10 calls for rewriting this CLAUDE.md once real code exists, to document the architecture
 decisions actually made (especially the §10 resolutions) — replace this starter-state version at
