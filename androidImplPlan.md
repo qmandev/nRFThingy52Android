@@ -895,6 +895,15 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
 §10 items 1–6 before or during Phase 0.
 
 ### Phase 0 — Fix the starter project & make decisions
+
+> **✅ COMPLETE & VERIFIED (2026-07-24).** `./gradlew build` green across all four variants + lint +
+> unit tests; installs and launches the Compose placeholder on a Pixel 9 (API 35) emulator.
+> Deviations from the bullets below, forced by the toolchain: (1) the standalone Kotlin Android
+> Gradle plugin is **not** applied — AGP 9 has built-in Kotlin support and rejects it; only the
+> Compose compiler plugin is applied. (2) `compileSdk` was bumped 36 → 37 and the AndroidX
+> dependencies moved to their current releases. See the §10 Decision log for the resolved decisions
+> (Kotlin 2.2.20 / Java 17 / Nordic `ble-ktx` / `mock`+`prod` flavors + lightweight DI / compileSdk 37).
+
 - Add the Kotlin Android Gradle plugin to root and `app` `build.gradle.kts` (the concrete,
   non-optional fix identified in §2.3 — the project does not currently compile Kotlin).
 - Raise `compileOptions`/add `kotlinOptions.jvmTarget` to 17+ (§2.3).
@@ -912,6 +921,14 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   `activity_main.xml`/View-based content and installs/launches on a device or emulator.
 
 ### Phase 1 — Theme & design tokens
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added `ui/theme/{Color,Theme,Type}.kt`. `NordicColors`
+> holds all 12 brand colors, cross-checked against the iOS `UIColorExtension.swift` `#colorLiteral`
+> floats (all 12 match). `ThingyTheme` uses light/dark `ColorScheme`s with `nordicBlue` primary +
+> `nordicRed` error in both; Material You dynamic color is off to preserve branding. `Type.kt` is the
+> Material 3 default `Typography()`. `./gradlew build` green; placeholder renders in nordicBlue on the
+> Pixel 9 emulator in both light and dark (visually confirmed). No hardcoded colors outside `Color.kt`.
+
 - `Color.kt` (`NordicColors`, §7.1, all 12 colors), `Theme.kt` (`ThingyTheme`, light/dark
   `ColorScheme`), `Type.kt` (Material 3 typography — no specific iOS font mapping required, since
   the iOS app uses system SF fonts throughout, matched by Android's default Roboto/system font via

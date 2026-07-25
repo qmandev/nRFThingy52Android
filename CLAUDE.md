@@ -21,13 +21,18 @@ open (§10).
 
 ## Current state: Phase 0 complete (Compose scaffolding builds)
 
-The starter has been converted to a Compose app and the whole project builds; the parity app itself
-(everything from Phase 1 on) is still unwritten. What exists now:
+The starter has been converted to a Compose app with the Nordic theme in place and the whole project
+builds; the parity app's screens (Phase 5 on) are still unwritten. What exists now:
 
-- **Compose entry point.** `MainActivity` is a `ComponentActivity` calling `setContent { … }` with a
-  `Text("Thingy52")` placeholder. The old View-based `activity_main.xml` and `AppCompatActivity` are
-  gone. Phase 1 replaces the bare `MaterialTheme` with `ThingyTheme`; Phase 5 replaces the
-  placeholder with the scanner screen + `NavHost`.
+- **Compose entry point + theme.** `MainActivity` is a `ComponentActivity` wrapping a
+  `Text("Thingy52")` placeholder in **`ThingyTheme`**. The old View-based `activity_main.xml` and
+  `AppCompatActivity` are gone. Phase 5 replaces the placeholder with the scanner screen + `NavHost`.
+- **Theme package** (`ui/theme/`): `Color.kt` (`NordicColors` — all 12 brand colors ported verbatim
+  from the iOS `UIColorExtension.swift`, verified against the source), `Theme.kt` (`ThingyTheme` with
+  light/dark `ColorScheme`s, `nordicBlue` primary + `nordicRed` error in both, Material You dynamic
+  color deliberately off to preserve branding), `Type.kt` (Material 3 default `Typography()` — the
+  iOS app uses the system font with no custom scale). Rule for later phases: no hardcoded colors in
+  screen code — pull from `MaterialTheme.colorScheme` or add a token to `NordicColors`.
 - **Dependencies wired:** Compose BOM + Material 3, activity-compose, navigation-compose,
   lifecycle-viewmodel/runtime-compose, kotlinx-coroutines-android. The View-world `appcompat`/
   `constraintlayout` deps were dropped; `com.google.android.material` is kept only as the XML
@@ -135,14 +140,13 @@ recommendation for each.
 
 ## Build order
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phase 0 is done and verified**
-(full `./gradlew build` green; installs and launches on the Pixel 9 emulator showing the placeholder).
-Remaining:
-Phase 1 theme/tokens (`ThingyTheme`/`Color.kt`) → Phase 2 pure domain layer → Phase 3 transport
-interfaces + fake → Phase 4 real BLE transport → Phase 5 scanner screen → Phase 6 detail (LED/button)
-→ Phase 7 sensor dashboards → Phase 8 fake-transport integration + UI tests → Phase 9 hardware
-verification → Phase 10 docs. Follow this order; later phases depend on the fake-transport seam from
-Phase 3.
+Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0 and 1 are done and
+verified** (full `./gradlew build` green; `ThingyTheme` renders the placeholder in nordicBlue on the
+Pixel 9 emulator in both light and dark). Remaining:
+Phase 2 pure domain layer → Phase 3 transport interfaces + fake → Phase 4 real BLE transport →
+Phase 5 scanner screen → Phase 6 detail (LED/button) → Phase 7 sensor dashboards → Phase 8
+fake-transport integration + UI tests → Phase 9 hardware verification → Phase 10 docs. Follow this
+order; later phases depend on the fake-transport seam from Phase 3.
 
 Phase 10 calls for rewriting this CLAUDE.md once real code exists, to document the architecture
 decisions actually made (especially the §10 resolutions) — replace this starter-state version at

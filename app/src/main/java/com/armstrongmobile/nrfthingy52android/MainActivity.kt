@@ -13,18 +13,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.armstrongmobile.nrfthingy52android.ui.theme.ThingyTheme
 
-// Phase 0 placeholder. Phase 1 introduces ThingyTheme; Phase 5 replaces this content with the
-// scanner screen and a NavHost. Single-Activity Compose entry point (plan §3).
+// Phase 1 placeholder: the bare MaterialTheme is replaced with ThingyTheme (Nordic palette). Phase 5
+// replaces this content with the scanner screen and a NavHost. Single-Activity Compose entry point
+// (plan §3). The placeholder text is tinted with the theme primary (nordicBlue) purely to make the
+// palette visible while the app has no real UI yet.
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MaterialTheme {
+            ThingyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Text(
                         text = "Thingy52",
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .fillMaxSize()
                             .wrapContentSize()
@@ -39,7 +43,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 private fun PlaceholderPreview() {
-    MaterialTheme {
-        Text(text = "Thingy52")
+    ThingyTheme {
+        Text(text = "Thingy52", color = MaterialTheme.colorScheme.primary)
     }
 }
