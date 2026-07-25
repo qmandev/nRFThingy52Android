@@ -938,6 +938,18 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   colors anywhere outside `Color.kt`.
 
 ### Phase 2 — Domain layer: UUIDs, wire-format parsing, pure models
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added the pure-Kotlin `domain/` package: `ThingyEnvironment`
+> and `ThingyMotion` (`object`s with `java.util.UUID` constants + parse/encode ported 1:1 from the iOS
+> source), `EnvironmentReading`/`MotionReading` sealed interfaces, `TapDirection`/`ThingyOrientation`
+> enums (labels verbatim, including the U+2212 minus), `RssiBucket` with `of(rssi)`, and internal
+> little-endian codec helpers (`BinaryFormat.kt`). Test fixtures ported verbatim from
+> `BLEModelTests.swift`: `ThingyEnvironmentTest` (5), `ThingyMotionTest` (5), `RssiBucketTest` (2) —
+> **12/12 green**. Verified no `android.`/`androidx.` imports in `domain/` (only `java.util.UUID` +
+> `kotlin.math`); full `./gradlew build` green. Note: `RssiBucket` exposes `assetName`
+> ("rssi_1".."rssi_4", mirroring the iOS `imageName`) + a `tier` index instead of an Android drawable
+> id, to keep the layer framework-free (§9.2's adaptation of `testImageNamesMatchAssets`).
+
 - `ThingyEnvironment.kt`, `ThingyMotion.kt` (§5 tables, `object`s with UUID constants + pure
   parse/encode functions), `EnvironmentReading`/`MotionReading` sealed interfaces,
   `TapDirection`/`ThingyOrientation` enums with `label`, `RssiBucket` enum with `of(rssi)`.

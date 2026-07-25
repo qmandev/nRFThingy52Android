@@ -41,6 +41,11 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
   `BuildConfig.USE_FAKE_TRANSPORT` (mock=true, prod=false) — the resolved answer to plan §10.6.
   They currently differ only by that flag; the composition root starts reading it in Phase 3+ once a
   transport exists. Build variants are `{mock,prod}{Debug,Release}`.
+- **Domain layer** (`domain/`, Phase 2): pure-Kotlin `ThingyEnvironment`/`ThingyMotion` (UUID
+  constants + `parse*`/`encode*`), `EnvironmentReading`/`MotionReading` sealed interfaces,
+  `TapDirection`/`ThingyOrientation`/`RssiBucket` enums, and internal LE codec helpers — ported 1:1
+  from the iOS source, zero Android deps (only `java.util.UUID` + `kotlin.math`). Unit-tested under
+  `app/src/test/.../domain/` (12 tests, fixtures verbatim from the iOS `BLEModelTests.swift`).
 - Java/Kotlin target raised to **17**; BLE permissions + `bluetooth_le` feature added to the manifest.
 
 Two non-obvious gotchas discovered while doing Phase 0 (both baked into the build files now):
@@ -140,13 +145,13 @@ recommendation for each.
 
 ## Build order
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0 and 1 are done and
-verified** (full `./gradlew build` green; `ThingyTheme` renders the placeholder in nordicBlue on the
-Pixel 9 emulator in both light and dark). Remaining:
-Phase 2 pure domain layer → Phase 3 transport interfaces + fake → Phase 4 real BLE transport →
-Phase 5 scanner screen → Phase 6 detail (LED/button) → Phase 7 sensor dashboards → Phase 8
-fake-transport integration + UI tests → Phase 9 hardware verification → Phase 10 docs. Follow this
-order; later phases depend on the fake-transport seam from Phase 3.
+Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–2 are done and
+verified** (full `./gradlew build` green; `ThingyTheme` renders in nordicBlue in light/dark; the
+`domain/` layer passes 12 unit tests). Remaining:
+Phase 3 transport interfaces + fake → Phase 4 real BLE transport → Phase 5 scanner screen →
+Phase 6 detail (LED/button) → Phase 7 sensor dashboards → Phase 8 fake-transport integration + UI
+tests → Phase 9 hardware verification → Phase 10 docs. Follow this order; later phases depend on the
+fake-transport seam from Phase 3.
 
 Phase 10 calls for rewriting this CLAUDE.md once real code exists, to document the architecture
 decisions actually made (especially the §10 resolutions) — replace this starter-state version at
