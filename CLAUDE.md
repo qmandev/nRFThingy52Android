@@ -65,9 +65,10 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
   Button, and the Environment/Motion dashboards gated on `hasEnvironmentData`/`hasMotionData` (any
   field non-null, matching iOS). `SettingsSection` is the header/Card/footer container replacing
   SwiftUI's inset-grouped `Section`; `SensorRow` renders one reading; `SensorFormat` holds the pure
-  formatters. **Formatters use `Locale.ROOT`, not the device locale** — iOS's `String(format:)` is
-  locale-independent, so a device-locale format would print `22,5 °C` in de-DE and diverge.
-  `rememberHeavyImpactHaptic` fires on button press.
+  formatters. **`SensorFormat` uses `Locale.ROOT` deliberately — don't "fix" it.** iOS's
+  `String(format:)` is locale-independent, so its German users see `22.5 °C` today; matching that is
+  parity. It's a known iOS-side defect (plan §10 item 11) to be fixed there first, then mirrored
+  here. `rememberHeavyImpactHaptic` fires on button press.
   `ThingyConnectionViewModel.factory(repository, unknownDeviceName)` reads `deviceAddress` from
   `SavedStateHandle`; an unresolvable address falls back to `UnavailableThingyController`, which
   reports disconnected rather than hanging on "Scanning...".
@@ -177,13 +178,18 @@ recommendation for each.
 
 ## Build order
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–7 are done and
-verified** (full `./gradlew build` green; 50 JVM unit tests; on the emulator the full UI works
-end-to-end against the fake — scan, tap, LED round-trip, and both live dashboards with every format
-checked). Remaining: Phase 8 fake-transport integration + Compose UI tests → Phase 9 hardware
-verification → Phase 10 localization/docs. **No real GATT traffic has run yet** — scanning has been
-exercised against the real API on the emulator's simulated adapter, but `ThingyGatt`'s
-connect/notify/read pipeline is unverified until the Phase 9 hardware pass.
+Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–8 are done and
+verified**: `./gradlew build` green with **59 JVM unit tests**, plus **4 instrumented tests** green
+via `./gradlew connectedMockDebugAndroidTest`. Remaining: Phase 9 hardware verification + the 15
+remaining locales → Phase 10 docs (which includes rewriting this file). **No real GATT traffic has
+run yet** — scanning has been exercised against the real API on the emulator's simulated adapter, but
+`ThingyGatt`'s connect/notify/read pipeline is unverified until the Phase 9 hardware pass, so treat
+the real transport as written-but-unproven.
+
+Test layout: the 9-test `ThingyPipelineTest` runs as **plain JVM tests** (the fake transport and
+ViewModels are pure Kotlin, so no emulator or Robolectric), and needs no polling — the fake emits
+synchronously under `MainDispatcherRule`. Only `SensorDashboardsUiTest` needs a device; its three
+tests are `assumeTrue(BuildConfig.USE_FAKE_TRANSPORT)`-guarded so they skip cleanly on `prod`.
 
 The mock build streams live demo readings (`ThingyMocks.startEnvironmentDemo`/`startMotionDemo`,
 launched from `ThingyApplication` when `USE_FAKE_TRANSPORT` and not under instrumentation). Phase 8

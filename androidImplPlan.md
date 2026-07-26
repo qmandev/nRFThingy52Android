@@ -798,6 +798,35 @@ agent (or a human reviewer) should weigh:
     submodule/subdirectory of something larger — outside this plan's scope to decide, but worth
     resolving before the first commit so history isn't later rewritten to relocate it.
 
+11. **Sensor readings are not localized — a shared iOS/Android defect, to be fixed on iOS first.**
+    *(Raised during Phase 7, 2026-07-25.)* The iOS `ThingyDetailView` formats every numeric reading
+    with `String(format: "%.1f °C", …)`. `String(format:)` **without an explicit `locale:` argument
+    is locale-independent** — it always emits a "." decimal separator and never applies digit
+    grouping. So on a German device the iOS app, which is otherwise fully localized into 16
+    languages, still prints `22.5 °C` where a German user expects `22,5 °C`. The same applies to
+    Pressure (`%.1f hPa`) and Heading (`%.0f°`).
+
+    **This is a defect in the iOS app, not an Android porting question.** The correct fix is on the
+    iOS side — pass `locale: Locale.current` to `String(format:)`, or better, use a
+    `FormatStyle`/`NumberFormatter` so the separator, grouping, and numbering system all follow the
+    user's locale. It is deliberately **not** fixed unilaterally on Android, because the whole point
+    of this port is behavior-for-behavior parity: a divergence here would make the two apps print
+    different text from identical sensor bytes, which is exactly what the parity build is meant to
+    avoid.
+
+    **Android therefore mirrors the current iOS behavior on purpose**: `SensorFormat` formats with
+    `Locale.ROOT`, and `SensorFormatTest.decimalSeparatorIsLocaleIndependent` pins it by setting the
+    default locale to Germany and asserting `22.5 °C` / `1013.3 hPa` still come out. That test is a
+    **parity lock, not an endorsement** — it exists so the behavior can't drift silently on Android
+    while iOS is still unfixed.
+
+    **When iOS is fixed**, mirror it here: switch `SensorFormat` to the device locale (`Locale`
+    default rather than `ROOT`) and invert that test to assert the localized separator. Note the row
+    *labels* are already localized normally via `stringResource`; only the numeric values are
+    affected. Humidity (`"$percent %"`), Steps, Orientation, and Last Tap interpolate integers and
+    enum labels rather than formatting decimals, so they are unaffected by the separator issue —
+    though Steps would gain digit grouping (`1,234` / `1.234`) under a locale-aware formatter.
+
 ### Decision log (resolved during Phase 0 — 2026-07-24)
 
 Decisions taken against the open questions above, recorded here so the rationale isn't lost. Items
@@ -1179,6 +1208,40 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   passes.
 
 ### Phase 8 — Fake-transport integration & UI test suite
+
+> **✅ COMPLETE & VERIFIED (2026-07-26).** Added `ThingyPipelineTest` (all 9 §9.2 rows) and
+> `SensorDashboardsUiTest` (3 Compose UI tests). **59 JVM unit tests** and **4 instrumented tests**
+> green; `./gradlew build` clean, lint 0 errors.
+>
+> **The pipeline suite runs as plain JVM unit tests — no emulator, no Robolectric.** §9.2 left the
+> venue open ("instrumented or Robolectric… whichever the team prefers"); because the fake transport
+> and both ViewModels are pure Kotlin, the 9 tests need neither, which satisfies this phase's DoD
+> ("CI runs them green without requiring an emulator with Bluetooth hardware access") outright. They
+> also need none of the iOS suite's `waitUntil(...)` polling: the fake emits synchronously and
+> `MainDispatcherRule` installs an unconfined dispatcher, so a simulated event is observable on the
+> ViewModel immediately. That removes the timing flakiness the iOS tests have to defend against.
+>
+> **`SensorDashboardsUiTest`** (`app/src/androidTest/`) ports the XCUITest plus the UI-layer halves of
+> `testLEDToggleWritesAndReadsBack` and `testButtonPressAndReleaseNotify` — the latter being the piece
+> Phase 6 could not check over adb, since `pressButton()` must be called inside the app process. It
+> asserts on row *labels* like the iOS test, not values. Run with `./gradlew connectedMockDebugAndroidTest`.
+>
+> **Flavor guard.** The three UI tests are `assumeTrue(BuildConfig.USE_FAKE_TRANSPORT)`-guarded, the
+> direct analogue of the iOS suite's `XCTSkipUnless(isSimulator)`. Verified on both flavors: **mock →
+> 4 tests, 0 skipped, 0 failed; prod → 3 skipped, 0 failed.** (Gradle's console progress counter
+> misreports totals for assumption-skips — "Finished 7 tests" for a 4-test run — but the JUnit XML is
+> unambiguous and is what the numbers above come from.)
+>
+> Two things this suite pins that nothing else could: the demo loops really are suppressed under
+> instrumentation (the "Environment"/"Motion" `assertDoesNotExist` checks would fail otherwise, since
+> a demo tick would populate them), and the dashboards genuinely appear only *after* the first
+> reading — the on-screen transition Phase 7 could not observe on device because the demos tick too
+> quickly.
+>
+> Note: `createAndroidComposeRule` is deprecated in Compose 1.11 in favor of the
+> `androidx.compose.ui.test.junit4.v2` variant, which uses `StandardTestDispatcher` instead of
+> `UnconfinedTestDispatcher`. Migrated; the v2 factory returns the same `AndroidComposeTestRule` type,
+> so it was an import swap, and all 4 tests still pass.
 - Write the full `ThingyPipelineTest` suite (§9.2, 9 tests) and `SensorDashboardsUiTest` against
   whichever fake-vs-real selection mechanism §10 item 6 resolved to.
 - **Definition of done:** all tests listed in §9.2 exist and pass; CI (if configured) runs them

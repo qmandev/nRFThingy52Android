@@ -8,10 +8,16 @@ import java.util.Locale
 // exactly — units, decimal places and separators (plan §6.2). Pure functions so the formats are
 // unit-testable without a Compose or Android context.
 //
-// Locale.ROOT is deliberate: iOS's String(format:) without an explicit locale is locale-independent
-// and always emits a "." decimal separator, so formatting with the device locale here would diverge
-// from the iOS output (e.g. "22,5 °C" in de-DE). Only the *numbers* are locale-independent; the row
-// labels themselves are localized through stringResource.
+// DO NOT "fix" the locale handling here. Locale.ROOT is deliberate parity, not an oversight: iOS's
+// String(format:) without an explicit locale always emits a "." decimal separator, so a German user
+// sees "22.5 °C" on iOS today. Formatting with the device locale here would print "22,5 °C" and make
+// the two apps render different text from identical sensor bytes.
+//
+// This is a known defect **in the iOS app** — see plan §10 item 11. The fix belongs there
+// (String(format:locale:) or a FormatStyle/NumberFormatter); when iOS lands it, mirror it here by
+// switching to the default locale and inverting
+// SensorFormatTest.decimalSeparatorIsLocaleIndependent. Only the numeric values are affected — the
+// row labels localize normally through stringResource.
 object SensorFormat {
 
     // Placeholder shown until the first reading of that kind arrives (iOS: `value ?? "—"`).

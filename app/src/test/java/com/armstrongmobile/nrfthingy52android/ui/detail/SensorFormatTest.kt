@@ -60,8 +60,11 @@ class SensorFormatTest {
         assertNull(SensorFormat.lastTap(null, 3))
     }
 
-    // iOS's String(format:) is locale-independent and always emits a "." decimal separator; a
-    // comma-decimal default locale must not change the reading.
+    // PARITY LOCK, not an endorsement. iOS's String(format:) is locale-independent and always emits
+    // a "." decimal separator, so its German users see "22.5 °C" today — a defect in the iOS app
+    // (plan §10 item 11), which is where the fix belongs. This test exists so Android can't silently
+    // drift away from that behavior while iOS is still unfixed. When iOS switches to a locale-aware
+    // formatter, invert this test to assert the localized separator.
     @Test
     fun decimalSeparatorIsLocaleIndependent() {
         val original = Locale.getDefault()
