@@ -61,9 +61,13 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
   throttle, ported from iOS `handleDiscovery`), `ScannerScreen` (Nordic-blue `LargeTopAppBar`,
   scanning spinner, `ContentUnavailableView`-equivalent empty state), `ThingyRow`. `MainActivity`
   hosts the `NavHost` with `"scanner"` and `"detail/{deviceAddress}"`.
-- **Detail screen** (`ui/detail/`, Phase 6): `ThingyDetailScreen` with the LED and Button sections
-  (Environment/Motion are Phase 7), `SettingsSection` (the header/Card/footer container replacing
-  SwiftUI's inset-grouped `Section` — reuse it for the Phase 7 sections), `rememberHeavyImpactHaptic`.
+- **Detail screen** (`ui/detail/`, Phases 6–7): `ThingyDetailScreen` with all four sections — LED,
+  Button, and the Environment/Motion dashboards gated on `hasEnvironmentData`/`hasMotionData` (any
+  field non-null, matching iOS). `SettingsSection` is the header/Card/footer container replacing
+  SwiftUI's inset-grouped `Section`; `SensorRow` renders one reading; `SensorFormat` holds the pure
+  formatters. **Formatters use `Locale.ROOT`, not the device locale** — iOS's `String(format:)` is
+  locale-independent, so a device-locale format would print `22,5 °C` in de-DE and diverge.
+  `rememberHeavyImpactHaptic` fires on button press.
   `ThingyConnectionViewModel.factory(repository, unknownDeviceName)` reads `deviceAddress` from
   `SavedStateHandle`; an unresolvable address falls back to `UnavailableThingyController`, which
   reports disconnected rather than hanging on "Scanning...".
@@ -173,14 +177,18 @@ recommendation for each.
 
 ## Build order
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–6 are done and
-verified** (full `./gradlew build` green; 42 JVM unit tests; on the emulator the scanner lists the
-mock device, tapping opens the detail screen, and the LED toggle round-trips OFF→ON→OFF through the
-read-back path). Remaining: Phase 7 sensor dashboards → Phase 8 fake-transport integration + Compose
-UI tests → Phase 9 hardware verification → Phase 10 docs. Build screens against the `mock` flavor:
-both transports satisfy the same interfaces, so Phase 7 needs no hardware. **No real GATT traffic has
-run yet** — scanning has been exercised against the real API on the emulator's simulated adapter, but
-`ThingyGatt`'s connect/notify/read pipeline is unverified until the Phase 9 hardware pass.
+Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–7 are done and
+verified** (full `./gradlew build` green; 50 JVM unit tests; on the emulator the full UI works
+end-to-end against the fake — scan, tap, LED round-trip, and both live dashboards with every format
+checked). Remaining: Phase 8 fake-transport integration + Compose UI tests → Phase 9 hardware
+verification → Phase 10 localization/docs. **No real GATT traffic has run yet** — scanning has been
+exercised against the real API on the emulator's simulated adapter, but `ThingyGatt`'s
+connect/notify/read pipeline is unverified until the Phase 9 hardware pass.
+
+The mock build streams live demo readings (`ThingyMocks.startEnvironmentDemo`/`startMotionDemo`,
+launched from `ThingyApplication` when `USE_FAKE_TRANSPORT` and not under instrumentation). Phase 8
+tests should drive `ThingyMocks.controller` directly instead — the demos are suppressed under tests
+precisely so they don't fight the test's own values.
 
 Phase 10 calls for rewriting this CLAUDE.md once real code exists, to document the architecture
 decisions actually made (especially the §10 resolutions) — replace this starter-state version at

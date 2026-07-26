@@ -1,5 +1,6 @@
 package com.armstrongmobile.nrfthingy52android.ble.fake
 
+import com.armstrongmobile.nrfthingy52android.domain.TapDirection
 import com.armstrongmobile.nrfthingy52android.domain.ThingyOrientation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -54,23 +55,45 @@ object ThingyMocks {
         }
     }
 
-    // Mirrors the iOS startMotionDemo() timer.
+    // Mirrors the iOS startMotionDemo() timer, with one deliberate demo-only difference: orientation
+    // is re-emitted on every tick and a tap is simulated periodically. iOS emits orientation just once
+    // at loop start and never taps, which means a screen opened later never sees those two values —
+    // the events are already gone, since readings are not replayed to late subscribers. Re-emitting
+    // keeps all four Motion rows alive for interactive use and on-device format checks. This affects
+    // demo content only; no parsing, gating, or formatting behavior differs from iOS.
     fun startMotionDemo(scope: CoroutineScope): Job = scope.launch {
         var steps = 0
         var headingDegrees = 0.0
         var elapsedSeconds = 0.0
-        controller.simulateOrientation(ThingyOrientation.PORTRAIT)
+        var orientationIndex = 0
+        var tickCount = 0
         while (isActive) {
             steps += Random.nextInt(0, 5)
             headingDegrees = (headingDegrees + Random.nextDouble(-15.0, 15.0)) % 360
             if (headingDegrees < 0) headingDegrees += 360
+
+            controller.simulateOrientation(ThingyOrientation.entries[orientationIndex])
             controller.simulateStepCount(steps = steps, durationSeconds = elapsedSeconds)
             controller.simulateHeading(degrees = headingDegrees)
+            if (tickCount % TAP_EVERY_N_TICKS == 0) {
+                controller.simulateTap(
+                    direction = TapDirection.entries.random(),
+                    count = Random.nextInt(1, 4),
+                )
+            }
+
             delay(MOTION_DEMO_INTERVAL_MS)
             elapsedSeconds += MOTION_DEMO_INTERVAL_MS / 1000.0
+            tickCount++
+            // Drift slowly through the orientations rather than flipping every tick.
+            if (tickCount % ORIENTATION_EVERY_N_TICKS == 0) {
+                orientationIndex = (orientationIndex + 1) % ThingyOrientation.entries.size
+            }
         }
     }
 
     private const val ENVIRONMENT_DEMO_INTERVAL_MS = 2_000L
     private const val MOTION_DEMO_INTERVAL_MS = 3_000L
+    private const val TAP_EVERY_N_TICKS = 3
+    private const val ORIENTATION_EVERY_N_TICKS = 4
 }

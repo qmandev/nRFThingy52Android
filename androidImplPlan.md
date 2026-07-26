@@ -1135,6 +1135,42 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   `ThingyMocks.ledIsOn` on iOS); button press/release updates the row and triggers a haptic.
 
 ### Phase 7 — Environment & Motion dashboards
+
+> **✅ COMPLETE & VERIFIED (2026-07-25).** Added the Environment and Motion sections to
+> `ThingyDetailScreen` (both reusing `SettingsSection`), `SensorRow` (icon + label + trailing value
+> with `fontFeatureSettings = "tnum"`, Compose's `.monospacedDigit()` equivalent, falling back to an
+> EM DASH), and `SensorFormat` — pure formatters matching the §6.2 format strings exactly.
+> `ThingyApplication` now starts the demo loops in the mock build, mirroring iOS's `ThingyApp.init`
+> (simulator-only, skipped under tests so the Phase 8 suite drives values itself; the Android analogue
+> of iOS's `XCTestConfigurationFilePath` check is whether the instrumentation classes loaded into the
+> process). 50 unit tests green (8 new `SensorFormatTest`); `./gradlew build` green, lint 0 errors.
+>
+> **All eight formats verified on-device** (mock flavor, Pixel 9): `22.4 °C`, `43 %`, `1011.0 hPa`,
+> `474 ppm · 15 ppb`, `Landscape`, `17`, `346°`, `Z− · ×1` — the last carrying the U+2212 minus and
+> U+00D7 multiplication sign, matching iOS byte-for-byte.
+>
+> **Locale note.** The numeric formats use `Locale.ROOT`, not the device locale. iOS's `String(format:)`
+> without an explicit locale is locale-independent and always emits a "." decimal separator, so
+> formatting with the device locale would diverge (e.g. `22,5 °C` in de-DE). `SensorFormatTest` pins
+> this with a test that sets the default locale to Germany. Only the numbers are locale-independent —
+> the row labels localize normally through `stringResource`.
+>
+> **Two bugs found and fixed during on-device verification.** (1) `ic_temperature` and `ic_air_quality`
+> rendered as solid filled squares: the official SVGs carry a leading `M0,0h24v24H0V0z` bounding-box
+> path, and the Phase 5 conversion filter only matched the space-separated spelling, so the box was
+> being painted. Both were corrected and every vendored icon re-audited (all now have exactly one path;
+> the four `rssi_*` legitimately have four bars each). (2) Orientation and Last Tap permanently showed
+> the placeholder, because iOS's `startMotionDemo` emits orientation once at loop start and never taps
+> — and readings are not replayed to late subscribers, so a screen opened afterwards never sees them.
+> The Android demo now re-emits orientation each tick and taps periodically. **This is a deliberate,
+> demo-content-only divergence** that makes all four Motion rows usable interactively; no parsing,
+> gating, or formatting behavior differs from iOS.
+>
+> **Not verifiable on device:** the "dashboards appear only after the *first* reading" transition. The
+> demo loops tick every 2–3 s, so a section populates within a second or two of opening the screen. The
+> gating itself is unit-tested (`FakeThingyTransportTest` asserts `hasEnvironmentData`/`hasMotionData`
+> are false before any `simulate*` call and true after), and the Phase 8 UI suite — which controls the
+> fake directly — is where the on-screen transition belongs.
 - `ThingyDetailScreen`'s Environment and Motion sections (§6.2), the `hasEnvironmentData`/
   `hasMotionData` conditional-visibility logic, all eight sensor rows with their icons (§7.3) and
   formatted value text.
