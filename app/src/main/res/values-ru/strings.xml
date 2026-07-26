@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ru: transcribed verbatim from the iOS ru.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Устройства поблизости</string>
+    <string name="scanning">Поиск...</string>
+    <string name="unknown_device">Неизвестное устройство</string>
+    <string name="cant_see_your_thingy">НЕ ВИДИТЕ СВОЙ THINGY?</string>
+    <string name="empty_state_step_1">1. Убедитесь, что устройство включено.</string>
+    <string name="empty_state_step_1_detail">Переведите переключатель рядом с разъёмом micro USB, чтобы включить его.</string>
+    <string name="empty_state_step_2">2. Убедитесь, что батарейка-таблетка заряжена.</string>
+    <string name="empty_state_step_2_detail">Если нет, подключите устройство к компьютеру или зарядному устройству кабелем micro USB. Батарейка-таблетка находится на нижней стороне отладочной платы.</string>
+    <string name="on">ВКЛЮЧЕНО</string>
+    <string name="off">ВЫКЛЮЧЕНО</string>
+    <string name="pressed">НАЖАТА</string>
+    <string name="released">ОТПУЩЕНА</string>
+    <string name="reading">Чтение...</string>
+    <string name="disconnected">ОТКЛЮЧЕНО</string>
+    <string name="led">Светодиод</string>
+    <string name="button">Кнопка</string>
+    <string name="led_section_footer">Переключение включает или выключает светодиод на Thingy.</string>
+    <string name="button_section_footer">Нажатие и отпускание кнопки на Thingy обновит состояние здесь.</string>
+    <string name="environment">Окружающая среда</string>
+    <string name="temperature">Температура</string>
+    <string name="humidity">Влажность</string>
+    <string name="pressure">Давление</string>
+    <string name="air_quality">Качество воздуха</string>
+    <string name="environment_section_footer">Показания датчиков, передаваемые с Thingy в реальном времени.</string>
+    <string name="motion">Движение</string>
+    <string name="orientation">Ориентация</string>
+    <string name="steps">Шаги</string>
+    <string name="heading">Курс</string>
+    <string name="last_tap">Последнее касание</string>
+    <string name="motion_section_footer">Ориентация, шаги, курс и касания по данным датчиков движения Thingy.</string>
+</resources>

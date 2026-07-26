@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ko: transcribed verbatim from the iOS ko.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">주변 기기</string>
+    <string name="scanning">검색 중...</string>
+    <string name="unknown_device">알 수 없는 기기</string>
+    <string name="cant_see_your_thingy">THINGY가 보이지 않나요?</string>
+    <string name="empty_state_step_1">1. 전원이 켜져 있는지 확인하세요.</string>
+    <string name="empty_state_step_1_detail">마이크로 USB 포트 옆의 스위치를 켜 주세요.</string>
+    <string name="empty_state_step_2">2. 코인 셀 배터리에 전력이 남아 있는지 확인하세요.</string>
+    <string name="empty_state_step_2_detail">그렇지 않다면 마이크로 USB 케이블로 PC나 충전기에 연결하세요. 코인 셀 배터리는 개발 키트 아래쪽에 있습니다.</string>
+    <string name="on">켜짐</string>
+    <string name="off">꺼짐</string>
+    <string name="pressed">활성화됨</string>
+    <string name="released">비활성화됨</string>
+    <string name="reading">읽는 중...</string>
+    <string name="disconnected">연결 끊김</string>
+    <string name="led">LED</string>
+    <string name="button">버튼</string>
+    <string name="led_section_footer">스위치를 전환하면 Thingy의 LED가 켜지거나 꺼집니다.</string>
+    <string name="button_section_footer">Thingy의 버튼을 누르고 떼면 여기에 상태가 업데이트됩니다.</string>
+    <string name="environment">환경</string>
+    <string name="temperature">온도</string>
+    <string name="humidity">습도</string>
+    <string name="pressure">기압</string>
+    <string name="air_quality">공기질</string>
+    <string name="environment_section_footer">Thingy에서 실시간으로 전송되는 센서 측정값입니다.</string>
+    <string name="motion">모션</string>
+    <string name="orientation">방향</string>
+    <string name="steps">걸음 수</string>
+    <string name="heading">방위</string>
+    <string name="last_tap">마지막 탭</string>
+    <string name="motion_section_footer">Thingy의 모션 센서가 보고한 방향, 걸음 수, 방위 및 탭입니다.</string>
+</resources>

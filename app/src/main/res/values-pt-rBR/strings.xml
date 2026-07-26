@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- pt-BR: transcribed verbatim from the iOS pt-BR.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Dispositivos próximos</string>
+    <string name="scanning">Procurando...</string>
+    <string name="unknown_device">Dispositivo desconhecido</string>
+    <string name="cant_see_your_thingy">NÃO ESTÁ VENDO SEU THINGY?</string>
+    <string name="empty_state_step_1">1. Verifique se ele está ligado.</string>
+    <string name="empty_state_step_1_detail">Acione o interruptor ao lado da porta micro USB para ligá-lo.</string>
+    <string name="empty_state_step_2">2. Verifique se a bateria de célula tipo moeda tem carga.</string>
+    <string name="empty_state_step_2_detail">Se não tiver, conecte-o a um PC ou a um carregador com um cabo micro USB. A bateria fica na parte de baixo do kit de desenvolvimento.</string>
+    <string name="on">LIGADO</string>
+    <string name="off">DESLIGADO</string>
+    <string name="pressed">PRESSIONADO</string>
+    <string name="released">LIBERADO</string>
+    <string name="reading">Lendo...</string>
+    <string name="disconnected">DESCONECTADO</string>
+    <string name="led">LED</string>
+    <string name="button">Botão</string>
+    <string name="led_section_footer">Acionar o interruptor liga ou desliga o LED do Thingy.</string>
+    <string name="button_section_footer">Pressionar e soltar o botão do Thingy atualiza o estado aqui.</string>
+    <string name="environment">Ambiente</string>
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Umidade</string>
+    <string name="pressure">Pressão</string>
+    <string name="air_quality">Qualidade do ar</string>
+    <string name="environment_section_footer">Leituras de sensores transmitidas ao vivo do Thingy.</string>
+    <string name="motion">Movimento</string>
+    <string name="orientation">Orientação</string>
+    <string name="steps">Passos</string>
+    <string name="heading">Direção</string>
+    <string name="last_tap">Último toque</string>
+    <string name="motion_section_footer">Orientação, passos, direção e toques informados pelos sensores de movimento do Thingy.</string>
+</resources>

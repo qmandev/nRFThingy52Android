@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- fi: transcribed verbatim from the iOS fi.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Lähellä olevat laitteet</string>
+    <string name="scanning">Etsitään...</string>
+    <string name="unknown_device">Tuntematon laite</string>
+    <string name="cant_see_your_thingy">ETKÖ NÄE THINGYÄSI?</string>
+    <string name="empty_state_step_1">1. Varmista, että se on kytketty päälle.</string>
+    <string name="empty_state_step_1_detail">Kytke se päälle micro USB -portin vieressä olevasta kytkimestä.</string>
+    <string name="empty_state_step_2">2. Varmista, että nappiparistossa on virtaa.</string>
+    <string name="empty_state_step_2_detail">Jos ei, liitä se tietokoneeseen tai laturiin micro USB -kaapelilla. Nappiparisto on kehityskortin alapuolella.</string>
+    <string name="on">PÄÄLLÄ</string>
+    <string name="off">POIS</string>
+    <string name="pressed">PAINETTU</string>
+    <string name="released">VAPAUTETTU</string>
+    <string name="reading">Lukee...</string>
+    <string name="disconnected">YHTEYS KATKAISTU</string>
+    <string name="led">LED</string>
+    <string name="button">Painike</string>
+    <string name="led_section_footer">Kytkimen kääntäminen sytyttää tai sammuttaa Thingyn LEDin.</string>
+    <string name="button_section_footer">Thingyn painikkeen painaminen ja vapauttaminen päivittää tilan tähän.</string>
+    <string name="environment">Ympäristö</string>
+    <string name="temperature">Lämpötila</string>
+    <string name="humidity">Ilmankosteus</string>
+    <string name="pressure">Ilmanpaine</string>
+    <string name="air_quality">Ilmanlaatu</string>
+    <string name="environment_section_footer">Thingyltä suoratoistettavat live-anturilukemat.</string>
+    <string name="motion">Liike</string>
+    <string name="orientation">Asento</string>
+    <string name="steps">Askeleet</string>
+    <string name="heading">Suunta</string>
+    <string name="last_tap">Viimeisin napautus</string>
+    <string name="motion_section_footer">Thingyn liikeanturien raportoimat asento, askeleet, suunta ja napautukset.</string>
+</resources>

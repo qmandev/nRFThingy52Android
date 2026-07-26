@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ro: transcribed verbatim from the iOS ro.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Dispozitive din apropiere</string>
+    <string name="scanning">Se caută...</string>
+    <string name="unknown_device">Dispozitiv necunoscut</string>
+    <string name="cant_see_your_thingy">NU ÎȚI VEZI THINGY-UL?</string>
+    <string name="empty_state_step_1">1. Asigură-te că este pornit.</string>
+    <string name="empty_state_step_1_detail">Acționează comutatorul de lângă portul micro USB pentru a-l porni.</string>
+    <string name="empty_state_step_2">2. Asigură-te că bateria tip pastilă are energie.</string>
+    <string name="empty_state_step_2_detail">Dacă nu, conectează-l la un PC sau la un încărcător cu un cablu micro USB. Bateria tip pastilă se află pe partea de jos a kitului de dezvoltare.</string>
+    <string name="on">PORNIT</string>
+    <string name="off">OPRIT</string>
+    <string name="pressed">APASAT</string>
+    <string name="released">NEAPĂSAT</string>
+    <string name="reading">Se actualizează starea...</string>
+    <string name="disconnected">DECONECTAT</string>
+    <string name="led">LED</string>
+    <string name="button">Buton</string>
+    <string name="led_section_footer">Acționarea comutatorului aprinde sau stinge LED-ul de pe Thingy.</string>
+    <string name="button_section_footer">Apăsarea și eliberarea butonului de pe Thingy va actualiza starea aici.</string>
+    <string name="environment">Mediu</string>
+    <string name="temperature">Temperatură</string>
+    <string name="humidity">Umiditate</string>
+    <string name="pressure">Presiune</string>
+    <string name="air_quality">Calitatea aerului</string>
+    <string name="environment_section_footer">Citiri de senzori transmise în timp real de la Thingy.</string>
+    <string name="motion">Mișcare</string>
+    <string name="orientation">Orientare</string>
+    <string name="steps">Pași</string>
+    <string name="heading">Direcție</string>
+    <string name="last_tap">Ultima atingere</string>
+    <string name="motion_section_footer">Orientare, pași, direcție și atingeri raportate de senzorii de mișcare ai Thingy.</string>
+</resources>

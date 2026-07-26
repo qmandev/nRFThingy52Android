@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vi: transcribed verbatim from the iOS vi.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Thiết bị ở gần</string>
+    <string name="scanning">Đang quét...</string>
+    <string name="unknown_device">Thiết bị chưa nhận dạng</string>
+    <string name="cant_see_your_thingy">KHÔNG THẤY THINGY CỦA BẠN?</string>
+    <string name="empty_state_step_1">1. Hãy chắc chắn rằng thiết bị đã được bật.</string>
+    <string name="empty_state_step_1_detail">Gạt công tắc bên cạnh cổng micro USB để bật thiết bị.</string>
+    <string name="empty_state_step_2">2. Hãy chắc chắn rằng pin cúc áo còn điện.</string>
+    <string name="empty_state_step_2_detail">Nếu không, hãy kết nối thiết bị với máy tính hoặc bộ sạc bằng cáp micro USB. Pin cúc áo nằm ở mặt dưới của bộ kit phát triển.</string>
+    <string name="on">BẬT</string>
+    <string name="off">TẮT</string>
+    <string name="pressed">ĐÃ ẤN</string>
+    <string name="released">ĐÃ NHẢ</string>
+    <string name="reading">Đang đọc...</string>
+    <string name="disconnected">ĐÃ NGẮT KẾT NỐI</string>
+    <string name="led">Đèn LED</string>
+    <string name="button">Nút</string>
+    <string name="led_section_footer">Gạt công tắc sẽ BẬT hoặc TẮT đèn LED trên Thingy.</string>
+    <string name="button_section_footer">Nhấn và nhả nút trên Thingy sẽ cập nhật trạng thái tại đây.</string>
+    <string name="environment">Môi trường</string>
+    <string name="temperature">Nhiệt độ</string>
+    <string name="humidity">Độ ẩm</string>
+    <string name="pressure">Áp suất</string>
+    <string name="air_quality">Chất lượng không khí</string>
+    <string name="environment_section_footer">Số liệu cảm biến trực tiếp truyền từ Thingy.</string>
+    <string name="motion">Chuyển động</string>
+    <string name="orientation">Hướng đặt</string>
+    <string name="steps">Số bước</string>
+    <string name="heading">Phương hướng</string>
+    <string name="last_tap">Lần chạm cuối</string>
+    <string name="motion_section_footer">Hướng đặt, số bước, phương hướng và các lần chạm do cảm biến chuyển động của Thingy báo về.</string>
+</resources>

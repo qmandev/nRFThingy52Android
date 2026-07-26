@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- mr: transcribed verbatim from the iOS mr.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">जवळपासची उपकरणे</string>
+    <string name="scanning">शोधत आहे...</string>
+    <string name="unknown_device">अज्ञात उपकरण</string>
+    <string name="cant_see_your_thingy">तुमचे थिंगी दिसत नाही?</string>
+    <string name="empty_state_step_1">१. ते चालू आहे याची खात्री करा.</string>
+    <string name="empty_state_step_1_detail">ते चालू करण्यासाठी मायक्रो USB पोर्टशेजारील स्विच हलवा.</string>
+    <string name="empty_state_step_2">२. कॉइन सेल बॅटरीमध्ये चार्ज असल्याची खात्री करा.</string>
+    <string name="empty_state_step_2_detail">नसल्यास, मायक्रो USB केबलने ते पीसी किंवा चार्जरला जोडा. कॉइन सेल बॅटरी डेव्ह किटच्या खालच्या बाजूला आहे.</string>
+    <string name="on">चालू</string>
+    <string name="off">बंद</string>
+    <string name="pressed">दाबले</string>
+    <string name="released">सोडले</string>
+    <string name="reading">वाचले जात आहे...</string>
+    <string name="disconnected">कनेक्शन तुटले</string>
+    <string name="led">एलईडी</string>
+    <string name="button">बटण</string>
+    <string name="led_section_footer">स्विच हलवल्याने थिंगीवरील एलईडी चालू किंवा बंद होईल.</string>
+    <string name="button_section_footer">थिंगीवरील बटण दाबून सोडल्यास येथे स्थिती अद्ययावत होईल.</string>
+    <string name="environment">वातावरण</string>
+    <string name="temperature">तापमान</string>
+    <string name="humidity">आर्द्रता</string>
+    <string name="pressure">दाब</string>
+    <string name="air_quality">हवेची गुणवत्ता</string>
+    <string name="environment_section_footer">थिंगीकडून थेट प्रवाहित होणारी सेन्सर मापने.</string>
+    <string name="motion">हालचाल</string>
+    <string name="orientation">अभिमुखता</string>
+    <string name="steps">पावले</string>
+    <string name="heading">दिशा</string>
+    <string name="last_tap">शेवटचा टॅप</string>
+    <string name="motion_section_footer">थिंगीच्या हालचाल सेन्सरने नोंदवलेली अभिमुखता, पावले, दिशा आणि टॅप.</string>
+</resources>

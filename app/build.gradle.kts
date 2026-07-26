@@ -57,6 +57,13 @@ android {
         compose = true
         buildConfig = true
     }
+    lint {
+        // "Scanning..." and "Reading..." use three periods rather than U+2026, because that is what
+        // the iOS Localizable.strings holds. Taking lint's advice would render visibly different text
+        // from the same key on the two platforms, so parity wins over typography here. Suppressed
+        // project-wide rather than with 32 inline tools:ignore attributes (2 strings × 16 locales).
+        disable += "TypographyEllipsis"
+    }
 }
 
 dependencies {

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- de: transcribed verbatim from the iOS de.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Geräte in der Nähe</string>
+    <string name="scanning">Suche...</string>
+    <string name="unknown_device">Unbekanntes Gerät</string>
+    <string name="cant_see_your_thingy">THINGY NICHT ZU SEHEN?</string>
+    <string name="empty_state_step_1">1. Stellen Sie sicher, dass es eingeschaltet ist.</string>
+    <string name="empty_state_step_1_detail">Betätigen Sie den Schalter neben dem Micro-USB-Anschluss, um es einzuschalten.</string>
+    <string name="empty_state_step_2">2. Stellen Sie sicher, dass die Knopfzelle geladen ist.</string>
+    <string name="empty_state_step_2_detail">Falls nicht, schließen Sie es mit einem Micro-USB-Kabel an einen PC oder ein Ladegerät an. Die Knopfzelle befindet sich auf der Unterseite des Dev-Kits.</string>
+    <string name="on">AN</string>
+    <string name="off">AUS</string>
+    <string name="pressed">GEDRÜCKT</string>
+    <string name="released">LOSGELASSEN</string>
+    <string name="reading">Lese...</string>
+    <string name="disconnected">GETRENNT</string>
+    <string name="led">LED</string>
+    <string name="button">Taste</string>
+    <string name="led_section_footer">Das Umlegen des Schalters schaltet die LED am Thingy AN oder AUS.</string>
+    <string name="button_section_footer">Drücken und Loslassen der Taste am Thingy aktualisiert den Status hier.</string>
+    <string name="environment">Umgebung</string>
+    <string name="temperature">Temperatur</string>
+    <string name="humidity">Luftfeuchtigkeit</string>
+    <string name="pressure">Luftdruck</string>
+    <string name="air_quality">Luftqualität</string>
+    <string name="environment_section_footer">Live-Sensorwerte, übertragen vom Thingy.</string>
+    <string name="motion">Bewegung</string>
+    <string name="orientation">Ausrichtung</string>
+    <string name="steps">Schritte</string>
+    <string name="heading">Richtung</string>
+    <string name="last_tap">Letztes Antippen</string>
+    <string name="motion_section_footer">Ausrichtung, Schritte, Richtung und Antippen, gemeldet von den Bewegungssensoren des Thingy.</string>
+</resources>

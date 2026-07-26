@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- pl: transcribed verbatim from the iOS pl.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Urządzenia w pobliżu</string>
+    <string name="scanning">Skanowanie...</string>
+    <string name="unknown_device">Nieznane urządzenie</string>
+    <string name="cant_see_your_thingy">NIE WIDZISZ SWOJEGO THINGY?</string>
+    <string name="empty_state_step_1">1. Upewnij się, że jest włączone.</string>
+    <string name="empty_state_step_1_detail">Przesuń przełącznik obok portu micro USB, aby je włączyć.</string>
+    <string name="empty_state_step_2">2. Upewnij się, że bateria pastylkowa jest naładowana.</string>
+    <string name="empty_state_step_2_detail">Jeśli nie, podłącz urządzenie do komputera lub ładowarki kablem micro USB. Bateria pastylkowa znajduje się na spodzie zestawu deweloperskiego.</string>
+    <string name="on">WŁĄCZONE</string>
+    <string name="off">WYŁĄCZONE</string>
+    <string name="pressed">WCIŚNIĘTY</string>
+    <string name="released">ZWOLNIONY</string>
+    <string name="reading">Pobieranie...</string>
+    <string name="disconnected">ROZŁĄCZONO</string>
+    <string name="led">LED</string>
+    <string name="button">Przycisk</string>
+    <string name="led_section_footer">Przestawienie przełącznika włącza lub wyłącza diodę LED na Thingy.</string>
+    <string name="button_section_footer">Naciśnięcie i zwolnienie przycisku na Thingy zaktualizuje stan w tym miejscu.</string>
+    <string name="environment">Środowisko</string>
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Wilgotność</string>
+    <string name="pressure">Ciśnienie</string>
+    <string name="air_quality">Jakość powietrza</string>
+    <string name="environment_section_footer">Odczyty czujników przesyłane na żywo z Thingy.</string>
+    <string name="motion">Ruch</string>
+    <string name="orientation">Orientacja</string>
+    <string name="steps">Kroki</string>
+    <string name="heading">Kierunek</string>
+    <string name="last_tap">Ostatnie stuknięcie</string>
+    <string name="motion_section_footer">Orientacja, kroki, kierunek i stuknięcia raportowane przez czujniki ruchu Thingy.</string>
+</resources>

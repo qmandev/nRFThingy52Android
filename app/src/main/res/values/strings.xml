@@ -1,12 +1,14 @@
-<resources>
-    <string name="app_name">nRFThingy52Android</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Product/brand names, never translated on either platform. -->
+    <string name="app_name" translatable="false">nRFThingy52Android</string>
 
     <!-- Values are the exact English text from the iOS en.lproj/Localizable.strings (plan §8.2).
          Resource names are new (the iOS keys are the literal display text); the values must not be
-         paraphrased. The 15 other locales are populated in Phase 8. -->
+         paraphrased. All 15 other locales are populated under values-<qualifier>/ — but note that
+         only 6 of these 30 values are actually translated upstream; see plan §10 item 12. -->
 
     <!-- Scanner -->
-    <string name="scanner_title">Thingy52</string>
+    <string name="scanner_title" translatable="false">Thingy52</string>
     <string name="nearby_devices">Nearby Devices</string>
     <string name="scanning">Scanning...</string>
     <string name="unknown_device">Unknown Device</string>
@@ -45,7 +47,12 @@
     <string name="motion_section_footer">Orientation, steps, heading, and taps reported by the Thingy\'s motion sensors.</string>
 
     <!-- Content descriptions. No iOS counterpart: SwiftUI derives accessibility labels from Text,
-         while Compose needs them stated for TalkBack. -->
-    <string name="cd_signal_strength">Signal strength: %1$d of 4</string>
-    <string name="cd_scanning">Scanning for devices</string>
+         while Compose needs them stated for TalkBack.
+
+         These are genuinely awaiting translation — not marked translatable="false", because they are
+         real user-facing text that a screen-reader user in any locale should hear in their own
+         language. There is no iOS source to transcribe and plan §8.2 forbids machine translation, so
+         they ship English-only for now and are tracked with the upstream gap in §10 item 12. -->
+    <string name="cd_signal_strength" tools:ignore="MissingTranslation">Signal strength: %1$d of 4</string>
+    <string name="cd_scanning" tools:ignore="MissingTranslation">Scanning for devices</string>
 </resources>

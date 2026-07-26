@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- uk: transcribed verbatim from the iOS uk.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Пристрої поблизу</string>
+    <string name="scanning">Пошук...</string>
+    <string name="unknown_device">Невідомий пристрій</string>
+    <string name="cant_see_your_thingy">НЕ БАЧИТЕ СВІЙ THINGY?</string>
+    <string name="empty_state_step_1">1. Переконайтеся, що пристрій увімкнено.</string>
+    <string name="empty_state_step_1_detail">Переведіть перемикач біля роз\'єму micro USB, щоб увімкнути його.</string>
+    <string name="empty_state_step_2">2. Переконайтеся, що батарейка-таблетка заряджена.</string>
+    <string name="empty_state_step_2_detail">Якщо ні, під\'єднайте пристрій до комп\'ютера або зарядного пристрою кабелем micro USB. Батарейка-таблетка розташована на нижньому боці плати.</string>
+    <string name="on">ВВІМКНЕНО</string>
+    <string name="off">ВИМКНЕНО</string>
+    <string name="pressed">НАТИСНУТО</string>
+    <string name="released">ВIДПУЩЕНО</string>
+    <string name="reading">Читання...</string>
+    <string name="disconnected">ВІД\'ЄДНАНО</string>
+    <string name="led">Світлодіод</string>
+    <string name="button">Кнопка</string>
+    <string name="led_section_footer">Перемикання вмикає або вимикає світлодіод на Thingy.</string>
+    <string name="button_section_footer">Натискання та відпускання кнопки на Thingy оновить стан тут.</string>
+    <string name="environment">Довкілля</string>
+    <string name="temperature">Температура</string>
+    <string name="humidity">Вологість</string>
+    <string name="pressure">Тиск</string>
+    <string name="air_quality">Якість повітря</string>
+    <string name="environment_section_footer">Показники датчиків, що передаються з Thingy у реальному часі.</string>
+    <string name="motion">Рух</string>
+    <string name="orientation">Орієнтація</string>
+    <string name="steps">Кроки</string>
+    <string name="heading">Курс</string>
+    <string name="last_tap">Останній дотик</string>
+    <string name="motion_section_footer">Орієнтація, кроки, курс і дотики за даними датчиків руху Thingy.</string>
+</resources>

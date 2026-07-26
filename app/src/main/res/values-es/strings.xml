@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- es: transcribed verbatim from the iOS es.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Dispositivos cercanos</string>
+    <string name="scanning">Buscando...</string>
+    <string name="unknown_device">Dispositivo Desconocido</string>
+    <string name="cant_see_your_thingy">¿NO VES TU THINGY?</string>
+    <string name="empty_state_step_1">1. Asegúrate de que está encendido.</string>
+    <string name="empty_state_step_1_detail">Acciona el interruptor junto al puerto micro USB para encenderlo.</string>
+    <string name="empty_state_step_2">2. Asegúrate de que la pila de botón tiene carga.</string>
+    <string name="empty_state_step_2_detail">Si no, conéctalo a un PC o a un cargador con un cable micro USB. La pila de botón está en la parte inferior del kit de desarrollo.</string>
+    <string name="on">ENCENDIDO</string>
+    <string name="off">APAGADO</string>
+    <string name="pressed">PULSADO</string>
+    <string name="released">LIBRE</string>
+    <string name="reading">Leyendo...</string>
+    <string name="disconnected">DESCONECTADO</string>
+    <string name="led">LED</string>
+    <string name="button">Botón</string>
+    <string name="led_section_footer">Al accionar el interruptor, el LED del Thingy se encenderá o se apagará.</string>
+    <string name="button_section_footer">Al pulsar y soltar el botón del Thingy se actualizará el estado aquí.</string>
+    <string name="environment">Entorno</string>
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Humedad</string>
+    <string name="pressure">Presión</string>
+    <string name="air_quality">Calidad del aire</string>
+    <string name="environment_section_footer">Lecturas de sensores en directo transmitidas desde el Thingy.</string>
+    <string name="motion">Movimiento</string>
+    <string name="orientation">Orientación</string>
+    <string name="steps">Pasos</string>
+    <string name="heading">Rumbo</string>
+    <string name="last_tap">Último toque</string>
+    <string name="motion_section_footer">Orientación, pasos, rumbo y toques informados por los sensores de movimiento del Thingy.</string>
+</resources>

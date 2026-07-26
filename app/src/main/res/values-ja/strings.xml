@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ja: transcribed verbatim from the iOS ja.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">近くのデバイス</string>
+    <string name="scanning">スキャン中...</string>
+    <string name="unknown_device">不明なデバイス</string>
+    <string name="cant_see_your_thingy">Thingy が見つかりませんか？</string>
+    <string name="empty_state_step_1">1. 電源が入っていることを確認してください。</string>
+    <string name="empty_state_step_1_detail">micro USB ポートの横にあるスイッチを切り替えて電源を入れてください。</string>
+    <string name="empty_state_step_2">2. コイン電池が充電されていることを確認してください。</string>
+    <string name="empty_state_step_2_detail">充電されていない場合は、micro USB ケーブルで PC または充電器に接続してください。コイン電池は開発キットの裏面にあります。</string>
+    <string name="on">オン</string>
+    <string name="off">オフ</string>
+    <string name="pressed">押されています</string>
+    <string name="released">離されています</string>
+    <string name="reading">読み取り中...</string>
+    <string name="disconnected">切断されました</string>
+    <string name="led">LED</string>
+    <string name="button">ボタン</string>
+    <string name="led_section_footer">スイッチを切り替えると、Thingy の LED がオンまたはオフになります。</string>
+    <string name="button_section_footer">Thingy のボタンを押して離すと、ここに状態が更新されます。</string>
+    <string name="environment">環境</string>
+    <string name="temperature">温度</string>
+    <string name="humidity">湿度</string>
+    <string name="pressure">気圧</string>
+    <string name="air_quality">空気品質</string>
+    <string name="environment_section_footer">Thingy からリアルタイムで送信されるセンサーの測定値です。</string>
+    <string name="motion">モーション</string>
+    <string name="orientation">向き</string>
+    <string name="steps">歩数</string>
+    <string name="heading">方位</string>
+    <string name="last_tap">最後のタップ</string>
+    <string name="motion_section_footer">Thingy のモーションセンサーが報告する向き、歩数、方位、タップです。</string>
+</resources>

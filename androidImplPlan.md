@@ -619,6 +619,15 @@ reading `de.lproj/Localizable.strings`) contains a translated value for each key
 placeholders), so the Android `strings.xml` files should be populated with the corresponding
 translated text pulled from each locale's `Localizable.strings`, not left as English-only stubs.
 
+> **⚠️ CORRECTION (2026-07-26, during Phase 9).** The paragraph above is **wrong**, and it is worth
+> understanding why so the same mistake isn't repeated: it verified *key count* parity, not value
+> content. Every `.lproj` does have all 30 keys, but **only 6 of the 30 values are actually
+> translated** (4 in `fr`). The other 24 are English strings sitting in the translated files. The
+> translated ones are the UIKit-era originals — `ON`, `OFF`, `PRESSED`, `RELEASED`, `Reading...`,
+> `Unknown Device` — while **everything added during the SwiftUI rewrite was never sent for
+> translation**: the whole scanner empty state, and every LED/Button/Environment/Motion label and
+> footer. Measured across all 15 locales, not inferred. See §10 item 12.
+
 ### 8.2 Exact string keys (source: `en.lproj/Localizable.strings`, all 32 current keys)
 
 Copy these into `res/values/strings.xml` with Android string-resource names (snake_case, since
@@ -798,8 +807,36 @@ agent (or a human reviewer) should weigh:
     submodule/subdirectory of something larger — outside this plan's scope to decide, but worth
     resolving before the first commit so history isn't later rewritten to relocate it.
 
-11. **Sensor readings are not localized — a shared iOS/Android defect, to be fixed on iOS first.**
-    *(Raised during Phase 7, 2026-07-25.)* The iOS `ThingyDetailView` formats every numeric reading
+11. **✅ RESOLVED (2026-07-26) — sensor readings are now locale-aware on both platforms.**
+    iOS landed the fix (`nRFThingy52/Utilities/SensorFormat.swift`, a `FormatStyle` replacing every
+    `String(format:)` in the reading path; 45/45 iOS tests green) and Android mirrored it. The
+    agreed cross-platform contract, now enforced by tests on both sides:
+
+    - **Locale-aware numbers.** Readings format through the caller's locale — `22,5 °C` in de-DE.
+      Each function takes an explicit `locale` parameter defaulting to the device locale, so tests
+      pin behavior without mutating global state.
+    - **All seven readings** go through the shared formatter, including the integer ones that were
+      correct by accident, so the next reading added inherits the right behavior.
+    - **Grouping suppressed everywhere** (`isGroupingUsed = false`): `1450 ppm`, `1234` steps —
+      never `1,450`/`1.450`. These are instrument values in a monospaced-digit column, and in de-DE
+      a grouping dot reads as a decimal point to exactly the users the fix was for. Flipping this is
+      a cross-platform change.
+    - **Rounding is HALF_EVEN**, matching Swift's `FormatStyle`.
+    - Separators stay fixed characters: `·` U+00B7, `×` U+00D7, tap minus U+2212.
+
+    **Android implementation note — a real trap.** The iOS hand-off stated that Kotlin's
+    `String.format` also defaults to HALF_EVEN. It does not: `java.util.Formatter` rounds **HALF_UP**,
+    so `"%.1f"` renders `-5.25` as `-5.3` where iOS renders `-5.2`. Verified empirically before
+    porting. `SensorFormat` therefore formats via `NumberFormat` (whose default is HALF_EVEN) rather
+    than `String.format`, and `SensorFormatTest.halfWayValuesRoundHalfEven` asserts `-5.25` and
+    `271.5` explicitly, since those are exactly where the two modes diverge. This also means Phase 7's
+    original `%.1f` implementation had a latent half-way divergence from iOS's old `printf` behavior
+    (C `printf` is round-half-to-even), which the old test had enshrined as `-5.3 °C`.
+
+    Verified on device: with a de-DE app locale the dashboard renders `21,8 °C`, `1014,1 hPa`,
+    `454 ppm · 14 ppb`, `356°`, `Z+ · ×1`.
+
+    *Historical context (raised during Phase 7, 2026-07-25):* The iOS `ThingyDetailView` formats every numeric reading
     with `String(format: "%.1f °C", …)`. `String(format:)` **without an explicit `locale:` argument
     is locale-independent** — it always emits a "." decimal separator and never applies digit
     grouping. So on a German device the iOS app, which is otherwise fully localized into 16
@@ -826,6 +863,102 @@ agent (or a human reviewer) should weigh:
     affected. Humidity (`"$percent %"`), Steps, Orientation, and Last Tap interpolate integers and
     enum labels rather than formatting decimals, so they are unaffected by the separator issue —
     though Steps would gain digit grouping (`1,234` / `1.234`) under a locale-aware formatter.
+
+12. **✅ RESOLVED (2026-07-26) — the 24 English placeholders are now translated on both platforms.**
+
+    *Found during Phase 9 while populating the locale files: 24 of 30 values were English
+    placeholders in the iOS `.lproj` files themselves — everything added during the SwiftUI rewrite
+    had never been sent for translation, while the 6 UIKit-era strings (`ON`, `OFF`, `PRESSED`,
+    `RELEASED`, `Reading...`, `Unknown Device`) were translated. This superseded §8.1's claim that the
+    app was fully localized; see the correction note there.*
+
+    iOS commissioned and landed all 24 the same day, and Android re-transcribed. Current state,
+    measured across every `.lproj` rather than sampled: **29–30 of 30 values differ from English per
+    locale**. The handful that still match are genuine translations that coincide with the English
+    word — `LED` is LED in 11 of 17 locales, and `fr` legitimately keeps `ON`/`OFF`/`Orientation` —
+    not placeholders.
+
+    **Two locales were added upstream in the same pass: `ja` and `zh-Hant`**, which are not in §8.1's
+    original list of 16. Android now ships **17** non-English files, `values-ja` and
+    `values-b+zh+Hant` included. Anyone re-running the transcription should enumerate the `.lproj`
+    directories rather than trusting §8.1's list.
+
+    **Qualifier forms, verified by resolution on device rather than by convention:**
+    `zh-CN → values-b+zh+Hans`, and `zh-TW`/`zh-Hant-TW`/`zh-Hant-HK → values-b+zh+Hant` (Hong Kong
+    correctly reaching Traditional was the point of adding it), `ja-JP → values-ja`,
+    `pt-BR → values-pt-rBR`. The iOS hand-off suggested `values-b+pt+BR`; the legacy `pt-rBR` form is
+    kept because Brazilian Portuguese is region-only — there is no script to express, which is the
+    single thing the legacy form cannot do — and `pt-rBR` is the conventional Android spelling. BCP-47
+    `b+` is used only where it earns its keep, i.e. the two Chinese scripts.
+
+    *(Method note: when sweeping locales over adb, allow the app several seconds to restart after
+    `cmd locale set-app-locales`. A 4-second settle produced one stale `uiautomator` dump that showed
+    the previous locale's text — briefly looking like Japanese was falling back to Simplified Chinese,
+    which Android would never do. Re-checking in isolation showed `ja` resolving correctly.)*
+
+    Verified on device across `es`, `uk`, `de`, `fi`, `ja`: every string renders translated, with
+    **zero text truncation** — checked programmatically for ellipsis-clipped nodes, not just by eye —
+    despite expansions up to 4.5× English (`ON` → `ENCENDIDO` / `ВВІМКНЕНО`). The `SettingsSection`
+    and `SensorRow` layouts absorb it: long state text sits beside the `Switch` on one line and
+    footers wrap to two.
+
+    Still English-only, deliberately: `app_name` and `scanner_title` are `translatable="false"`
+    (brand names), and the two Android-only accessibility strings (`cd_signal_strength`,
+    `cd_scanning`) have no iOS counterpart to transcribe, so they ship under an explicit
+    `tools:ignore="MissingTranslation"`. Those two should be translated whenever a11y copy is next
+    reviewed. **See also item 13, which this pass did *not* close** — the four `ThingyOrientation`
+    labels remain hardcoded English in both codebases.
+
+13. **⚠️ OPEN — the four orientation labels are hardcoded English, not localized, on both platforms.**
+    *(Surfaced 2026-07-26 while verifying the new translations on device: with a Spanish locale the
+    dashboard correctly reads "Orientación", but its **value** reads "Portrait".)*
+
+    `ThingyOrientation.label` returns `"Portrait"` / `"Landscape"` / `"Portrait (upside down)"` /
+    `"Landscape (upside down)"` as string literals in the enum — `ThingyMotion.swift` on iOS,
+    `ThingyOrientation.kt` here. They are not in `Localizable.strings`, so the 2026-07-26 translation
+    pass did not reach them, and no locale renders them translated.
+
+    The sibling `TapDirection.label` (`X+`, `X−`, …) needs no translation — those are symbols, and
+    locale-neutral by nature. Only the four orientation labels are affected.
+
+    **Is "Portrait" acceptable to Android users, or is "Vertical" the native term?** Answered from
+    Android's own `framework-res.apk` (pulled off the device; resource
+    `string/mediasize_unknown_portrait` / `_landscape`), not from opinion:
+
+    | Locale | Android's own "landscape" | Android's own "portrait" |
+    |---|---|---|
+    | en | Unknown landscape | Unknown portrait |
+    | es | Cualquier tamaño **horizontal** | Cualquier tamaño **vertical** |
+    | de | Unbekannt – **Querformat** | Unbekannt – **Hochformat** |
+    | it | **Orizzontale** sconosciuto | **Verticale** sconosciuto |
+    | pt | **Paisagem** desconhecido | **Retrato** desconhecido |
+    | fr | Taille inconnue au format **paysage** | Taille inconnue au format **portrait** |
+
+    So **"Vertical" is genuinely Android's Spanish term** — it is the platform's own vocabulary, not
+    an invented wording. Conversely, leaving the English "Portrait" is *not* generally acceptable: in
+    `es`, `de`, `it`, and `pt` it is simply a foreign word in an otherwise translated screen. The one
+    exception is `fr`, where "portrait" is the native term and the English string happens to read
+    correctly — which is probably why the gap survived unnoticed.
+
+    Note the platform's terms are *not* a literal translation of the English pair (German uses
+    Hochformat/Querformat, "high/cross format"; Portuguese uses Retrato/Paisagem). Whoever
+    commissions these should use each platform's established vocabulary rather than translating
+    "portrait" word-for-word — and iOS should land the matching strings at the same time.
+
+    Fixing it means moving them out of the enums into `Localizable.strings` / `strings.xml`, which
+    changes the enum from returning a `String` to returning a resource key or `@StringRes` id on the
+    Android side — a small but cross-cutting change to a **pure-domain type that currently has zero
+    framework dependencies** (plan §2, a deliberate property worth preserving). The clean approach is
+    to keep the enum framework-free and do the label lookup in the UI layer, the same way
+    `RssiBucket.assetName` maps to a drawable in `ThingyRow` rather than in the domain enum.
+
+    *This is deliberately not fixed unilaterally on Android* — same reasoning as item 11. Both apps
+    should localize these together, or a Spanish user sees "Vertical" on one platform and "Portrait"
+    on the other. Worth bundling with the `cd_*` accessibility strings into one small follow-up pass.
+
+    **Historical note:** the pre-regeneration version of this plan tracked this as its own §10 item;
+    the entry was lost when the file was reconstructed on 2026-07-24, which is why it resurfaced only
+    on visual inspection. Re-recorded here.
 
 ### Decision log (resolved during Phase 0 — 2026-07-24)
 
@@ -1248,6 +1381,41 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   green without requiring an emulator with Bluetooth hardware access.
 
 ### Phase 9 — Real-hardware verification & polish
+
+> **🟡 PARTIALLY COMPLETE (2026-07-26).**
+>
+> **✅ Localization done.** All 15 non-English `values-*/strings.xml` files exist, transcribed verbatim
+> from the corresponding iOS `.lproj/Localizable.strings` (never machine-translated). Qualifiers per
+> §8.1, with `zh-Hans` using the modern BCP-47 form `values-b+zh+Hans` rather than the legacy
+> `values-zh-rCN`, so it also matches zh-Hans-SG. `./gradlew build` green, **lint 0 errors**.
+> Verified on device with a de-DE app locale: `AUS`, `LOSGELASSEN`, `23,4 °C`.
+>
+> Two lint findings resolved rather than suppressed wholesale: `app_name`/`scanner_title` are
+> `translatable="false"` (brand names), and `TypographyEllipsis` is disabled project-wide with a
+> comment — `Scanning...`/`Reading...` must keep three periods because the iOS source does, so taking
+> lint's U+2026 advice would render different text from the same key.
+>
+> **Cross-checked against the iOS hand-off's §6 (`IOS_TASK_localize_readings_REPLY.md`):**
+> - §6.1 locale set of 18 → matched; ships 17 non-English files. Qualifier forms verified by
+>   on-device resolution (see §10 item 12).
+> - §6.2 conventions → matched, because the transcription was re-run *after* their pass: Finnish
+>   reads `PÄÄLLÄ`/`POIS` (not the withdrawn `SYTYTÄ`/`SAMMUTA`), and `LED` is spelled out only in
+>   non-Latin scripts (`Светодиод`, `Світлодіод`, `एलईडी`, `LED 灯`, `LED 燈`, `Đèn LED`).
+> - §6.3 the empty-state truncation bug → **does not reproduce on Android.** The exact strings they
+>   cite render in full: de "2. Stellen Sie sicher, dass die Knopfzelle geladen ist." and ru
+>   "2. Убедитесь, что батарейка-таблетка заряжена." Compose's `Text` defaults to unbounded
+>   `maxLines` and the empty state's `Column` imposes no height constraint, so the trap they hit does
+>   not exist here. Verified **visually from screenshots**, because `uiautomator` reports the semantic
+>   string rather than the rendered one and would not reveal a visual ellipsis.
+> - §6.4 `ja` must show a period → confirmed: `21.8 °C`, `1013.1 hPa`.
+> - §6.5 scope → matched: no multi-density or font-scale testing done, deferred on both platforms.
+>
+> **⛔ Hardware verification pending — no hardware available (2026-07-26).** Needs a physical Thingy:52
+> **and** a physical Android device; the emulator has no BLE radio, so `ThingyGatt`'s
+> connect/notify/read pipeline remains entirely unproven. Logged as pending rather than done, exactly
+> as the iOS project's own checklist stayed partially open for the same reason. Everything below the
+> localization bullet is still outstanding.
+
 - Run the full app against a real Thingy:52 on a physical Android device: discovery/RSSI, connect,
   LED toggle with read-back, button press/haptic, environment/motion dashboards populating,
   disconnect/reconnect, Bluetooth-off handling, a failed-connection scenario — mirroring the iOS

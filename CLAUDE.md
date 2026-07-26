@@ -65,15 +65,22 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
   Button, and the Environment/Motion dashboards gated on `hasEnvironmentData`/`hasMotionData` (any
   field non-null, matching iOS). `SettingsSection` is the header/Card/footer container replacing
   SwiftUI's inset-grouped `Section`; `SensorRow` renders one reading; `SensorFormat` holds the pure
-  formatters. **`SensorFormat` uses `Locale.ROOT` deliberately — don't "fix" it.** iOS's
-  `String(format:)` is locale-independent, so its German users see `22.5 °C` today; matching that is
-  parity. It's a known iOS-side defect (plan §10 item 11) to be fixed there first, then mirrored
-  here. `rememberHeavyImpactHaptic` fires on button press.
+  formatters. **`SensorFormat` mirrors a cross-platform contract (plan §10 item 11) — don't change
+  one side alone**: locale-aware numbers, grouping suppressed everywhere (`1450 ppm`, never `1,450`),
+  and HALF_EVEN rounding. It formats via `NumberFormat`, *not* `String.format`, because
+  `java.util.Formatter` rounds HALF_UP and would render `-5.25` as `-5.3` where iOS gives `-5.2`.
+  `rememberHeavyImpactHaptic` fires on button press.
   `ThingyConnectionViewModel.factory(repository, unknownDeviceName)` reads `deviceAddress` from
   `SavedStateHandle`; an unresolvable address falls back to `UnavailableThingyController`, which
   reports disconnected rather than hanging on "Scanning...".
-- **Strings + icons**: `res/values/strings.xml` holds all 29 keys from plan §8.2 with values verbatim
-  from the iOS `Localizable.strings` (the other 15 locales land in Phase 8). Icons are **vendored
+- **Strings + icons**: `res/values/strings.xml` holds all 30 keys from plan §8.2 with values verbatim
+  from the iOS `Localizable.strings`, and all **17** non-English locales are populated under
+  `values-<qualifier>/` (`zh-Hans`/`zh-Hant` use the BCP-47 `values-b+zh+Hans` form; `ja` and
+  `zh-Hant` were added upstream after the plan's §8.1 list was written, so enumerate the `.lproj`
+  dirs rather than trusting that list). Regenerate with `scratchpad/gen_locales.py` — it transcribes
+  verbatim from the `.lproj` files, never machine-translates. One gap remains: the four
+  `ThingyOrientation` labels are hardcoded English in both codebases (plan §10 item 13) — don't
+  localize them on Android alone. Icons are **vendored
   vector drawables**, not a Material Icons dependency — `rssi_1..4` are hand-drawn four-tier bars;
   the rest (`ic_scanning`, `ic_lightbulb`, `ic_temperature`, …) are converted from the official
   google/material-design-icons SVGs. `androidx.compose.material.icons` is deliberately not a
@@ -179,12 +186,12 @@ recommendation for each.
 ## Build order
 
 Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–8 are done and
-verified**: `./gradlew build` green with **59 JVM unit tests**, plus **4 instrumented tests** green
-via `./gradlew connectedMockDebugAndroidTest`. Remaining: Phase 9 hardware verification + the 15
-remaining locales → Phase 10 docs (which includes rewriting this file). **No real GATT traffic has
-run yet** — scanning has been exercised against the real API on the emulator's simulated adapter, but
-`ThingyGatt`'s connect/notify/read pipeline is unverified until the Phase 9 hardware pass, so treat
-the real transport as written-but-unproven.
+verified**: `./gradlew build` green with **62 JVM unit tests**, plus **4 instrumented tests** green
+via `./gradlew connectedMockDebugAndroidTest`. **Phase 9 is half done** — all 16 locales are
+populated, but the hardware checklist is **pending for want of hardware**: it needs a physical
+Thingy:52 *and* a physical Android device, since the emulator has no BLE radio. So `ThingyGatt`'s
+connect/notify/read pipeline is still entirely unproven — treat the real transport as
+written-but-untested. Then Phase 10 docs (which includes rewriting this file).
 
 Test layout: the 9-test `ThingyPipelineTest` runs as **plain JVM tests** (the fake transport and
 ViewModels are pure Kotlin, so no emulator or Robolectric), and needs no polling — the fake emits

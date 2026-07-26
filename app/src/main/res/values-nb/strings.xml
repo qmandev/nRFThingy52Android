@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- nb: transcribed verbatim from the iOS nb.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">Enheter i nærheten</string>
+    <string name="scanning">Søker...</string>
+    <string name="unknown_device">Ukjent Enhet</string>
+    <string name="cant_see_your_thingy">SER DU IKKE THINGY-EN DIN?</string>
+    <string name="empty_state_step_1">1. Kontroller at den er slått på.</string>
+    <string name="empty_state_step_1_detail">Vipp bryteren ved siden av micro-USB-porten for å slå den på.</string>
+    <string name="empty_state_step_2">2. Kontroller at knappcellebatteriet har strøm.</string>
+    <string name="empty_state_step_2_detail">Hvis ikke, koble den til en PC eller lader med en micro-USB-kabel. Knappcellebatteriet sitter på undersiden av utviklingssettet.</string>
+    <string name="on">PÅ</string>
+    <string name="off">AV</string>
+    <string name="pressed">NEDTRYKKET</string>
+    <string name="released">INAKTIV</string>
+    <string name="reading">Leser...</string>
+    <string name="disconnected">FRAKOBLET</string>
+    <string name="led">LED</string>
+    <string name="button">Knapp</string>
+    <string name="led_section_footer">Å vippe bryteren slår LED-en på Thingy PÅ eller AV.</string>
+    <string name="button_section_footer">Å trykke og slippe knappen på Thingy oppdaterer statusen her.</string>
+    <string name="environment">Miljø</string>
+    <string name="temperature">Temperatur</string>
+    <string name="humidity">Luftfuktighet</string>
+    <string name="pressure">Lufttrykk</string>
+    <string name="air_quality">Luftkvalitet</string>
+    <string name="environment_section_footer">Sanntids sensoravlesninger strømmet fra Thingy.</string>
+    <string name="motion">Bevegelse</string>
+    <string name="orientation">Orientering</string>
+    <string name="steps">Skritt</string>
+    <string name="heading">Retning</string>
+    <string name="last_tap">Siste trykk</string>
+    <string name="motion_section_footer">Orientering, skritt, retning og trykk rapportert av bevegelsessensorene i Thingy.</string>
+</resources>

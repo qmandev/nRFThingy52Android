@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- zh-Hant: transcribed verbatim from the iOS zh-Hant.lproj/Localizable.strings
+     (plan §8.2). Not machine-translated.
+
+     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     translations that coincide with the English word — "LED" is LED in most languages —
+     not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
+     English placeholders upstream until the iOS translation pass landed. See plan
+     §10 item 12.)
+
+     Strings with no iOS counterpart (app_name, scanner_title, and the cd_* content
+     descriptions) intentionally stay in values/ and fall back to English. -->
+<resources>
+    <string name="nearby_devices">附近的裝置</string>
+    <string name="scanning">正在掃描...</string>
+    <string name="unknown_device">未知裝置</string>
+    <string name="cant_see_your_thingy">找不到您的 Thingy？</string>
+    <string name="empty_state_step_1">1. 請確認裝置已開機。</string>
+    <string name="empty_state_step_1_detail">撥動 micro USB 連接埠旁邊的開關即可開機。</string>
+    <string name="empty_state_step_2">2. 請確認鈕扣電池有電。</string>
+    <string name="empty_state_step_2_detail">如果沒電，請用 micro USB 傳輸線將其連接到電腦或充電器。鈕扣電池位於開發套件的底面。</string>
+    <string name="on">開</string>
+    <string name="off">關</string>
+    <string name="pressed">按下</string>
+    <string name="released">放開</string>
+    <string name="reading">讀取中...</string>
+    <string name="disconnected">已中斷連線</string>
+    <string name="led">LED 燈</string>
+    <string name="button">按鈕</string>
+    <string name="led_section_footer">撥動開關會點亮或熄滅 Thingy 上的 LED 燈。</string>
+    <string name="button_section_footer">按下並放開 Thingy 上的按鈕，此處的狀態會隨之更新。</string>
+    <string name="environment">環境</string>
+    <string name="temperature">溫度</string>
+    <string name="humidity">濕度</string>
+    <string name="pressure">氣壓</string>
+    <string name="air_quality">空氣品質</string>
+    <string name="environment_section_footer">從 Thingy 即時傳輸的感測器讀數。</string>
+    <string name="motion">運動</string>
+    <string name="orientation">方向</string>
+    <string name="steps">步數</string>
+    <string name="heading">航向</string>
+    <string name="last_tap">最近輕點</string>
+    <string name="motion_section_footer">由 Thingy 的運動感測器報告的方向、步數、航向和輕點。</string>
+</resources>
