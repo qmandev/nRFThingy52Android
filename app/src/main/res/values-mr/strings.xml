@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">तुमचे थिंगी दिसत नाही?</string>
     <string name="empty_state_step_1">१. ते चालू आहे याची खात्री करा.</string>
     <string name="empty_state_step_1_detail">ते चालू करण्यासाठी मायक्रो USB पोर्टशेजारील स्विच हलवा.</string>
-    <string name="empty_state_step_2">२. कॉइन सेल बॅटरीमध्ये चार्ज असल्याची खात्री करा.</string>
-    <string name="empty_state_step_2_detail">नसल्यास, मायक्रो USB केबलने ते पीसी किंवा चार्जरला जोडा. कॉइन सेल बॅटरी डेव्ह किटच्या खालच्या बाजूला आहे.</string>
+    <string name="empty_state_step_2">२. बॅटरी चार्ज असल्याची खात्री करा.</string>
+    <string name="empty_state_step_2_detail">नसल्यास, मायक्रो USB केबलने ते पीसी किंवा चार्जरला जोडा. डेव्ह किटमध्ये रिचार्जेबल बॅटरी अंतर्भूत आहे.</string>
     <string name="on">चालू</string>
     <string name="off">बंद</string>
     <string name="pressed">दाबले</string>

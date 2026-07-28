@@ -20,8 +20,11 @@ MAPPING = [
     ("CAN'T SEE YOUR THINGY?", "cant_see_your_thingy"),
     ("1. Make sure it's switched on.", "empty_state_step_1"),
     ("Toggle the switch next to the micro USB port to switch it on.", "empty_state_step_1_detail"),
-    ("2. Make sure the coin cell battery has power.", "empty_state_step_2"),
-    ("If not, connect it to a PC or a charger using a micro USB cable. Coin cell battery is on the bottom side of the dev kit.", "empty_state_step_2_detail"),
+    # Corrected 2026-07-28: the Thingy:52 has no coin cell — it is a rechargeable 1440 mAh Li-Po
+    # charged over USB. The old wording came from the Nordic sample app both projects descend from.
+    # The replacement deliberately makes no claim about where the battery is; don't reintroduce one.
+    ("2. Make sure the battery is charged.", "empty_state_step_2"),
+    ("If not, connect it to a PC or a charger using a micro USB cable. The dev kit has a built-in rechargeable battery.", "empty_state_step_2_detail"),
     ("ON", "on"),
     ("OFF", "off"),
     ("PRESSED", "pressed"),

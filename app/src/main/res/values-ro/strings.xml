@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">NU ÎȚI VEZI THINGY-UL?</string>
     <string name="empty_state_step_1">1. Asigură-te că este pornit.</string>
     <string name="empty_state_step_1_detail">Acționează comutatorul de lângă portul micro USB pentru a-l porni.</string>
-    <string name="empty_state_step_2">2. Asigură-te că bateria tip pastilă are energie.</string>
-    <string name="empty_state_step_2_detail">Dacă nu, conectează-l la un PC sau la un încărcător cu un cablu micro USB. Bateria tip pastilă se află pe partea de jos a kitului de dezvoltare.</string>
+    <string name="empty_state_step_2">2. Asigură-te că bateria este încărcată.</string>
+    <string name="empty_state_step_2_detail">Dacă nu, conectează-l la un PC sau la un încărcător cu un cablu micro USB. Kitul de dezvoltare are un acumulator reîncărcabil integrat.</string>
     <string name="on">PORNIT</string>
     <string name="off">OPRIT</string>
     <string name="pressed">APASAT</string>

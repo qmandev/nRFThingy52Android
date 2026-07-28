@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">THINGY가 보이지 않나요?</string>
     <string name="empty_state_step_1">1. 전원이 켜져 있는지 확인하세요.</string>
     <string name="empty_state_step_1_detail">마이크로 USB 포트 옆의 스위치를 켜 주세요.</string>
-    <string name="empty_state_step_2">2. 코인 셀 배터리에 전력이 남아 있는지 확인하세요.</string>
-    <string name="empty_state_step_2_detail">그렇지 않다면 마이크로 USB 케이블로 PC나 충전기에 연결하세요. 코인 셀 배터리는 개발 키트 아래쪽에 있습니다.</string>
+    <string name="empty_state_step_2">2. 배터리가 충전되어 있는지 확인하세요.</string>
+    <string name="empty_state_step_2_detail">그렇지 않다면 마이크로 USB 케이블로 PC나 충전기에 연결하세요. 개발 키트에는 충전식 배터리가 내장되어 있습니다.</string>
     <string name="on">켜짐</string>
     <string name="off">꺼짐</string>
     <string name="pressed">활성화됨</string>

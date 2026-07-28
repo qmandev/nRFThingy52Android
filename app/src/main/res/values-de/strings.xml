@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">THINGY NICHT ZU SEHEN?</string>
     <string name="empty_state_step_1">1. Stellen Sie sicher, dass es eingeschaltet ist.</string>
     <string name="empty_state_step_1_detail">Betätigen Sie den Schalter neben dem Micro-USB-Anschluss, um es einzuschalten.</string>
-    <string name="empty_state_step_2">2. Stellen Sie sicher, dass die Knopfzelle geladen ist.</string>
-    <string name="empty_state_step_2_detail">Falls nicht, schließen Sie es mit einem Micro-USB-Kabel an einen PC oder ein Ladegerät an. Die Knopfzelle befindet sich auf der Unterseite des Dev-Kits.</string>
+    <string name="empty_state_step_2">2. Stellen Sie sicher, dass der Akku geladen ist.</string>
+    <string name="empty_state_step_2_detail">Falls nicht, schließen Sie es mit einem Micro-USB-Kabel an einen PC oder ein Ladegerät an. Das Dev-Kit hat einen fest eingebauten Akku.</string>
     <string name="on">AN</string>
     <string name="off">AUS</string>
     <string name="pressed">GEDRÜCKT</string>

@@ -15,8 +15,8 @@
     <string name="cant_see_your_thingy">CAN\'T SEE YOUR THINGY?</string>
     <string name="empty_state_step_1">1. Make sure it\'s switched on.</string>
     <string name="empty_state_step_1_detail">Toggle the switch next to the micro USB port to switch it on.</string>
-    <string name="empty_state_step_2">2. Make sure the coin cell battery has power.</string>
-    <string name="empty_state_step_2_detail">If not, connect it to a PC or a charger using a micro USB cable. Coin cell battery is on the bottom side of the dev kit.</string>
+    <string name="empty_state_step_2">2. Make sure the battery is charged.</string>
+    <string name="empty_state_step_2_detail">If not, connect it to a PC or a charger using a micro USB cable. The dev kit has a built-in rechargeable battery.</string>
 
     <!-- Detail: LED &amp; button -->
     <string name="on">ON</string>

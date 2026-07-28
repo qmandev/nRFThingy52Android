@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">VOUS NE VOYEZ PAS VOTRE THINGY ?</string>
     <string name="empty_state_step_1">1. Vérifiez qu\'il est allumé.</string>
     <string name="empty_state_step_1_detail">Basculez l\'interrupteur situé à côté du port micro USB pour l\'allumer.</string>
-    <string name="empty_state_step_2">2. Vérifiez que la pile bouton est chargée.</string>
-    <string name="empty_state_step_2_detail">Sinon, connectez-le à un PC ou à un chargeur avec un câble micro USB. La pile bouton se trouve sous le kit de développement.</string>
+    <string name="empty_state_step_2">2. Vérifiez que la batterie est chargée.</string>
+    <string name="empty_state_step_2_detail">Sinon, connectez-le à un PC ou à un chargeur avec un câble micro USB. Le kit de développement possède une batterie rechargeable intégrée.</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <string name="pressed">APPUYÉ</string>

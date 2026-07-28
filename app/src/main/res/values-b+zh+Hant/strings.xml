@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">找不到您的 Thingy？</string>
     <string name="empty_state_step_1">1. 請確認裝置已開機。</string>
     <string name="empty_state_step_1_detail">撥動 micro USB 連接埠旁邊的開關即可開機。</string>
-    <string name="empty_state_step_2">2. 請確認鈕扣電池有電。</string>
-    <string name="empty_state_step_2_detail">如果沒電，請用 micro USB 傳輸線將其連接到電腦或充電器。鈕扣電池位於開發套件的底面。</string>
+    <string name="empty_state_step_2">2. 請確認電池已充電。</string>
+    <string name="empty_state_step_2_detail">如果沒電，請用 micro USB 傳輸線將其連接到電腦或充電器。開發套件內建可充電電池。</string>
     <string name="on">開</string>
     <string name="off">關</string>
     <string name="pressed">按下</string>

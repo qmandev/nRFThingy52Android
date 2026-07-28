@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">KHÔNG THẤY THINGY CỦA BẠN?</string>
     <string name="empty_state_step_1">1. Hãy chắc chắn rằng thiết bị đã được bật.</string>
     <string name="empty_state_step_1_detail">Gạt công tắc bên cạnh cổng micro USB để bật thiết bị.</string>
-    <string name="empty_state_step_2">2. Hãy chắc chắn rằng pin cúc áo còn điện.</string>
-    <string name="empty_state_step_2_detail">Nếu không, hãy kết nối thiết bị với máy tính hoặc bộ sạc bằng cáp micro USB. Pin cúc áo nằm ở mặt dưới của bộ kit phát triển.</string>
+    <string name="empty_state_step_2">2. Hãy chắc chắn rằng pin đã được sạc.</string>
+    <string name="empty_state_step_2_detail">Nếu chưa, hãy kết nối thiết bị với máy tính hoặc bộ sạc bằng cáp micro USB. Bộ kit phát triển có pin sạc tích hợp.</string>
     <string name="on">BẬT</string>
     <string name="off">TẮT</string>
     <string name="pressed">ĐÃ ẤN</string>

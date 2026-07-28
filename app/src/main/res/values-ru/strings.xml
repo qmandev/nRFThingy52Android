@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">НЕ ВИДИТЕ СВОЙ THINGY?</string>
     <string name="empty_state_step_1">1. Убедитесь, что устройство включено.</string>
     <string name="empty_state_step_1_detail">Переведите переключатель рядом с разъёмом micro USB, чтобы включить его.</string>
-    <string name="empty_state_step_2">2. Убедитесь, что батарейка-таблетка заряжена.</string>
-    <string name="empty_state_step_2_detail">Если нет, подключите устройство к компьютеру или зарядному устройству кабелем micro USB. Батарейка-таблетка находится на нижней стороне отладочной платы.</string>
+    <string name="empty_state_step_2">2. Убедитесь, что аккумулятор заряжен.</string>
+    <string name="empty_state_step_2_detail">Если нет, подключите устройство к компьютеру или зарядному устройству кабелем micro USB. В отладочную плату встроен аккумулятор.</string>
     <string name="on">ВКЛЮЧЕНО</string>
     <string name="off">ВЫКЛЮЧЕНО</string>
     <string name="pressed">НАЖАТА</string>

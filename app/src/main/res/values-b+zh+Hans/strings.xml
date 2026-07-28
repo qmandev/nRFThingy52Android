@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">找不到您的 Thingy？</string>
     <string name="empty_state_step_1">1. 请确认设备已开机。</string>
     <string name="empty_state_step_1_detail">拨动 micro USB 接口旁边的开关即可开机。</string>
-    <string name="empty_state_step_2">2. 请确认纽扣电池有电。</string>
-    <string name="empty_state_step_2_detail">如果没电，请用 micro USB 数据线将其连接到电脑或充电器。纽扣电池位于开发套件的底面。</string>
+    <string name="empty_state_step_2">2. 请确认电池已充电。</string>
+    <string name="empty_state_step_2_detail">如果没电，请用 micro USB 数据线将其连接到电脑或充电器。开发套件内置可充电电池。</string>
     <string name="on">开</string>
     <string name="off">关</string>
     <string name="pressed">按下</string>

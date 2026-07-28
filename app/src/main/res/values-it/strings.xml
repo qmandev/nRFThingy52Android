@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">NON VEDI IL TUO THINGY?</string>
     <string name="empty_state_step_1">1. Assicurati che sia acceso.</string>
     <string name="empty_state_step_1_detail">Sposta l\'interruttore accanto alla porta micro USB per accenderlo.</string>
-    <string name="empty_state_step_2">2. Assicurati che la batteria a bottone sia carica.</string>
-    <string name="empty_state_step_2_detail">In caso contrario, collegalo a un PC o a un caricabatterie con un cavo micro USB. La batteria a bottone si trova sul lato inferiore del dev kit.</string>
+    <string name="empty_state_step_2">2. Assicurati che la batteria sia carica.</string>
+    <string name="empty_state_step_2_detail">In caso contrario, collegalo a un PC o a un caricabatterie con un cavo micro USB. Il dev kit ha una batteria ricaricabile integrata.</string>
     <string name="on">ACCESO</string>
     <string name="off">SPENTO</string>
     <string name="pressed">PREMUTO</string>

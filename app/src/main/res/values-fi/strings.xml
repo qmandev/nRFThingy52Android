@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">ETKÖ NÄE THINGYÄSI?</string>
     <string name="empty_state_step_1">1. Varmista, että se on kytketty päälle.</string>
     <string name="empty_state_step_1_detail">Kytke se päälle micro USB -portin vieressä olevasta kytkimestä.</string>
-    <string name="empty_state_step_2">2. Varmista, että nappiparistossa on virtaa.</string>
-    <string name="empty_state_step_2_detail">Jos ei, liitä se tietokoneeseen tai laturiin micro USB -kaapelilla. Nappiparisto on kehityskortin alapuolella.</string>
+    <string name="empty_state_step_2">2. Varmista, että akku on ladattu.</string>
+    <string name="empty_state_step_2_detail">Jos ei, liitä se tietokoneeseen tai laturiin micro USB -kaapelilla. Kehityskortissa on kiinteä ladattava akku.</string>
     <string name="on">PÄÄLLÄ</string>
     <string name="off">POIS</string>
     <string name="pressed">PAINETTU</string>

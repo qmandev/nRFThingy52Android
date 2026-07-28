@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">¿NO VES TU THINGY?</string>
     <string name="empty_state_step_1">1. Asegúrate de que está encendido.</string>
     <string name="empty_state_step_1_detail">Acciona el interruptor junto al puerto micro USB para encenderlo.</string>
-    <string name="empty_state_step_2">2. Asegúrate de que la pila de botón tiene carga.</string>
-    <string name="empty_state_step_2_detail">Si no, conéctalo a un PC o a un cargador con un cable micro USB. La pila de botón está en la parte inferior del kit de desarrollo.</string>
+    <string name="empty_state_step_2">2. Asegúrate de que la batería está cargada.</string>
+    <string name="empty_state_step_2_detail">Si no, conéctalo a un PC o a un cargador con un cable micro USB. El kit de desarrollo lleva una batería recargable integrada.</string>
     <string name="on">ENCENDIDO</string>
     <string name="off">APAGADO</string>
     <string name="pressed">PULSADO</string>

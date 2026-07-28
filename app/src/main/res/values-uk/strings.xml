@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">НЕ БАЧИТЕ СВІЙ THINGY?</string>
     <string name="empty_state_step_1">1. Переконайтеся, що пристрій увімкнено.</string>
     <string name="empty_state_step_1_detail">Переведіть перемикач біля роз\'єму micro USB, щоб увімкнути його.</string>
-    <string name="empty_state_step_2">2. Переконайтеся, що батарейка-таблетка заряджена.</string>
-    <string name="empty_state_step_2_detail">Якщо ні, під\'єднайте пристрій до комп\'ютера або зарядного пристрою кабелем micro USB. Батарейка-таблетка розташована на нижньому боці плати.</string>
+    <string name="empty_state_step_2">2. Переконайтеся, що акумулятор заряджено.</string>
+    <string name="empty_state_step_2_detail">Якщо ні, під\'єднайте пристрій до комп\'ютера або зарядного пристрою кабелем micro USB. У плату вбудовано акумулятор.</string>
     <string name="on">ВВІМКНЕНО</string>
     <string name="off">ВИМКНЕНО</string>
     <string name="pressed">НАТИСНУТО</string>

@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">NÃO ESTÁ VENDO SEU THINGY?</string>
     <string name="empty_state_step_1">1. Verifique se ele está ligado.</string>
     <string name="empty_state_step_1_detail">Acione o interruptor ao lado da porta micro USB para ligá-lo.</string>
-    <string name="empty_state_step_2">2. Verifique se a bateria de célula tipo moeda tem carga.</string>
-    <string name="empty_state_step_2_detail">Se não tiver, conecte-o a um PC ou a um carregador com um cabo micro USB. A bateria fica na parte de baixo do kit de desenvolvimento.</string>
+    <string name="empty_state_step_2">2. Verifique se a bateria está carregada.</string>
+    <string name="empty_state_step_2_detail">Se não estiver, conecte-o a um PC ou a um carregador com um cabo micro USB. O kit de desenvolvimento tem uma bateria recarregável integrada.</string>
     <string name="on">LIGADO</string>
     <string name="off">DESLIGADO</string>
     <string name="pressed">PRESSIONADO</string>

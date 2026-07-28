@@ -77,7 +77,7 @@ builds; the parity app's screens (Phase 5 on) are still unwritten. What exists n
   from the iOS `Localizable.strings`, and all **17** non-English locales are populated under
   `values-<qualifier>/` (`zh-Hans`/`zh-Hant` use the BCP-47 `values-b+zh+Hans` form; `ja` and
   `zh-Hant` were added upstream after the plan's §8.1 list was written, so enumerate the `.lproj`
-  dirs rather than trusting that list). Regenerate with `scratchpad/gen_locales.py` — it transcribes
+  dirs rather than trusting that list). Regenerate with `tools/gen_locales.py` — it transcribes
   verbatim from the `.lproj` files, never machine-translates. One gap remains: the four
   `ThingyOrientation` labels are hardcoded English in both codebases (plan §10 item 13) — don't
   localize them on Android alone. Icons are **vendored

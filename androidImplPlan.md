@@ -649,8 +649,8 @@ Android resource names but preserve the exact English value):
 <string name="cant_see_your_thingy">CAN\'T SEE YOUR THINGY?</string>
 <string name="empty_state_step_1">1. Make sure it\'s switched on.</string>
 <string name="empty_state_step_1_detail">Toggle the switch next to the micro USB port to switch it on.</string>
-<string name="empty_state_step_2">2. Make sure the coin cell battery has power.</string>
-<string name="empty_state_step_2_detail">If not, connect it to a PC or a charger using a micro USB cable. Coin cell battery is on the bottom side of the dev kit.</string>
+<string name="empty_state_step_2">2. Make sure the battery is charged.</string>
+<string name="empty_state_step_2_detail">If not, connect it to a PC or a charger using a micro USB cable. The dev kit has a built-in rechargeable battery.</string>
 <string name="led_section_footer">Toggling the switch will cause the LED on the Thingy to turn ON or OFF.</string>
 <string name="button_section_footer">Pressing and releasing the button on the Thingy will update the state here.</string>
 <string name="environment">Environment</string>
@@ -959,6 +959,31 @@ agent (or a human reviewer) should weigh:
     **Historical note:** the pre-regeneration version of this plan tracked this as its own §10 item;
     the entry was lost when the file was reconstructed on 2026-07-24, which is why it resurfaced only
     on visual inspection. Re-recorded here.
+
+14. **✅ RESOLVED — the empty-state help text described a battery the Thingy:52 does not have.**
+    *(Reported by the iOS session 2026-07-28 as §7 of `IOS_TASK_localize_readings_REPLY.md`, after
+    both platforms had already shipped the wrong text in all 18 locales.)*
+
+    `empty_state_step_2` / `_detail` told users to check a **coin cell battery on the bottom side of
+    the dev kit**. The Thingy:52 has no coin cell — it carries a **rechargeable 1440 mAh Li-Po charged
+    over USB**. The wording came from the Nordic sample app both projects descend from, so it is wrong
+    upstream too; do not "restore" it from any Nordic source.
+
+    | | Old | New |
+    |---|---|---|
+    | `empty_state_step_2` | `2. Make sure the coin cell battery has power.` | `2. Make sure the battery is charged.` |
+    | `empty_state_step_2_detail` | `…using a micro USB cable. Coin cell battery is on the bottom side of the dev kit.` | `…using a micro USB cable. The dev kit has a built-in rechargeable battery.` |
+
+    The replacement deliberately makes **no claim about where the battery is** — the old string's
+    specificity was the wrong part. Verified after re-transcription that no locale reintroduces a
+    location ("Unterseite", "parte inferior", "裏面", "mặt dưới", …).
+
+    Android's advantage here: resource *names* are stable, so unlike iOS (whose keys *are* the English
+    text) only the values changed — no key rename, no call-site edits. Re-running
+    `tools/gen_locales.py` after updating its two mapping keys rewrote all 17 non-English files;
+    `git diff` confirmed exactly two lines changed per locale and nothing else. Searching for
+    "coin cell" alone finds nothing in 17 of the 18 locales, so the check has to be run against the
+    translated terms (`Knopfzelle`, `pila de botón`, `nappiparisto`, `батарейка-таблетка`, `纽扣电池`, …).
 
 ### Decision log (resolved during Phase 0 — 2026-07-24)
 

@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">NIE WIDZISZ SWOJEGO THINGY?</string>
     <string name="empty_state_step_1">1. Upewnij się, że jest włączone.</string>
     <string name="empty_state_step_1_detail">Przesuń przełącznik obok portu micro USB, aby je włączyć.</string>
-    <string name="empty_state_step_2">2. Upewnij się, że bateria pastylkowa jest naładowana.</string>
-    <string name="empty_state_step_2_detail">Jeśli nie, podłącz urządzenie do komputera lub ładowarki kablem micro USB. Bateria pastylkowa znajduje się na spodzie zestawu deweloperskiego.</string>
+    <string name="empty_state_step_2">2. Upewnij się, że akumulator jest naładowany.</string>
+    <string name="empty_state_step_2_detail">Jeśli nie, podłącz urządzenie do komputera lub ładowarki kablem micro USB. Zestaw deweloperski ma wbudowany akumulator.</string>
     <string name="on">WŁĄCZONE</string>
     <string name="off">WYŁĄCZONE</string>
     <string name="pressed">WCIŚNIĘTY</string>

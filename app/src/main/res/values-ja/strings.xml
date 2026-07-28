@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">Thingy が見つかりませんか？</string>
     <string name="empty_state_step_1">1. 電源が入っていることを確認してください。</string>
     <string name="empty_state_step_1_detail">micro USB ポートの横にあるスイッチを切り替えて電源を入れてください。</string>
-    <string name="empty_state_step_2">2. コイン電池が充電されていることを確認してください。</string>
-    <string name="empty_state_step_2_detail">充電されていない場合は、micro USB ケーブルで PC または充電器に接続してください。コイン電池は開発キットの裏面にあります。</string>
+    <string name="empty_state_step_2">2. バッテリーが充電されていることを確認してください。</string>
+    <string name="empty_state_step_2_detail">充電されていない場合は、micro USB ケーブルで PC または充電器に接続してください。開発キットには充電式バッテリーが内蔵されています。</string>
     <string name="on">オン</string>
     <string name="off">オフ</string>
     <string name="pressed">押されています</string>

@@ -17,8 +17,8 @@
     <string name="cant_see_your_thingy">SER DU IKKE THINGY-EN DIN?</string>
     <string name="empty_state_step_1">1. Kontroller at den er slått på.</string>
     <string name="empty_state_step_1_detail">Vipp bryteren ved siden av micro-USB-porten for å slå den på.</string>
-    <string name="empty_state_step_2">2. Kontroller at knappcellebatteriet har strøm.</string>
-    <string name="empty_state_step_2_detail">Hvis ikke, koble den til en PC eller lader med en micro-USB-kabel. Knappcellebatteriet sitter på undersiden av utviklingssettet.</string>
+    <string name="empty_state_step_2">2. Kontroller at batteriet er ladet.</string>
+    <string name="empty_state_step_2_detail">Hvis ikke, koble den til en PC eller lader med en micro-USB-kabel. Utviklingssettet har et innebygd oppladbart batteri.</string>
     <string name="on">PÅ</string>
     <string name="off">AV</string>
     <string name="pressed">NEDTRYKKET</string>
