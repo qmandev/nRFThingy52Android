@@ -1,208 +1,124 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) working in this repository.
 
-## What this repo is
+Start with **`README.md`** for what the app is, how to build it, and the architecture with diagrams.
+This file covers what an agent needs *beyond* that: the reference documents, the invariants that are
+easy to violate, and the traps that cost real debugging time to find.
 
-A Kotlin + Jetpack Compose Android app being built as a behavior-for-behavior parity companion to
-the sibling iOS app at `/Users/armstrongllc/Desktop/BLE/nRFThingy52`. Same physical target — a
-Nordic Thingy:52 BLE dev kit — same GATT UUIDs, same wire-format parsing, same UX: scan for devices
-→ list with live RSSI icons → connect on tap → LED toggle with write-then-read-back confirmation →
-button press/release with haptics → Environment (temperature/humidity/pressure/air-quality) and
-Motion (orientation/steps/heading/tap) dashboards once readings arrive.
+## The two reference documents
 
-`androidImplPlan.md` (repo root) is the authoritative build spec — a ~900-line document that read
-the iOS app end-to-end and maps every iOS file/type/behavior to its Kotlin/Compose equivalent, with
-exact UUID/wire-format tables (§5), per-screen UI spec (§6), color palette (§7), localization plan
-(§8), test-by-test mapping (§9), and an 11-phase build order (§11). **Read it before writing code**;
-copy reference values (UUIDs, byte layouts, colors, string keys) from it rather than re-deriving
-them from the iOS source. Treat it as authoritative except where it explicitly flags a decision as
-open (§10).
+- **`androidImplPlan.md`** (repo root, ~1450 lines) is the authoritative build spec. It read the iOS
+  app end-to-end and maps every iOS file/type/behavior to its Kotlin/Compose equivalent, with exact
+  UUID/wire-format tables (§5), per-screen UI spec (§6), color palette (§7), localization plan (§8),
+  test-by-test mapping (§9), the **decision log and open items (§10)**, and the phased build order
+  with per-phase status callouts (§11). **Copy reference values from it** — UUIDs, byte layouts,
+  colors, string keys — rather than re-deriving them from the iOS source.
+- **The iOS app itself**, at `/Users/armstrongllc/Desktop/BLE/nRFThingy52`. It is the parity target,
+  and for anything the plan doesn't cover it is the tiebreaker.
 
-## Current state: Phase 0 complete (Compose scaffolding builds)
+Two cautions about the plan. It was **regenerated on 2026-07-24** after the original was deleted, and
+the reconstruction silently dropped content — §10's orientation-label item and the entire Phase 10
+section were both lost and had to be re-recorded. If the plan seems to be missing something you
+remember, that's a plausible explanation. And §8.1's claim that the iOS app was fully localized was
+simply wrong (it verified key *count*, not values); §10 item 12 supersedes it.
 
-The starter has been converted to a Compose app with the Nordic theme in place and the whole project
-builds; the parity app's screens (Phase 5 on) are still unwritten. What exists now:
+## Status
 
-- **Compose entry point + theme.** `MainActivity` is a `ComponentActivity` wrapping a
-  `Text("Thingy52")` placeholder in **`ThingyTheme`**. The old View-based `activity_main.xml` and
-  `AppCompatActivity` are gone. Phase 5 replaces the placeholder with the scanner screen + `NavHost`.
-- **Theme package** (`ui/theme/`): `Color.kt` (`NordicColors` — all 12 brand colors ported verbatim
-  from the iOS `UIColorExtension.swift`, verified against the source), `Theme.kt` (`ThingyTheme` with
-  light/dark `ColorScheme`s, `nordicBlue` primary + `nordicRed` error in both, Material You dynamic
-  color deliberately off to preserve branding), `Type.kt` (Material 3 default `Typography()` — the
-  iOS app uses the system font with no custom scale). Rule for later phases: no hardcoded colors in
-  screen code — pull from `MaterialTheme.colorScheme` or add a token to `NordicColors`.
-- **Dependencies wired:** Compose BOM + Material 3, activity-compose, navigation-compose,
-  lifecycle-viewmodel/runtime-compose, kotlinx-coroutines-android. The View-world `appcompat`/
-  `constraintlayout` deps were dropped; `com.google.android.material` is kept only as the XML
-  window-theme parent in `res/values/themes.xml`.
-- **Product flavors `mock` / `prod`** (dimension `transport`) each expose
-  `BuildConfig.USE_FAKE_TRANSPORT` (mock=true, prod=false) — the resolved answer to plan §10.6.
-  They currently differ only by that flag; the composition root starts reading it in Phase 3+ once a
-  transport exists. Build variants are `{mock,prod}{Debug,Release}`.
-- **Domain layer** (`domain/`, Phase 2): pure-Kotlin `ThingyEnvironment`/`ThingyMotion` (UUID
-  constants + `parse*`/`encode*`), `EnvironmentReading`/`MotionReading` sealed interfaces,
-  `TapDirection`/`ThingyOrientation`/`RssiBucket` enums, and internal LE codec helpers — ported 1:1
-  from the iOS source, zero Android deps (only `java.util.UUID` + `kotlin.math`). Unit-tested under
-  `app/src/test/.../domain/` (12 tests, fixtures verbatim from the iOS `BLEModelTests.swift`).
-- **Transport seam + both implementations** (`ble/`, Phase 3–4): `ThingyController` (exposing
-  `events: SharedFlow<ThingyGattEvent>`) and `BleScanner`/`ThingyScanResult` interfaces, implemented
-  by `ThingyGatt`/`AndroidBleScanner` (real, Nordic `ble-ktx`) and `FakeThingyController`/
-  `FakeBleScanner`/`ThingyMocks` (fake). Plus `BluetoothStateObserver` for the adapter-off path.
-- **Composition root** (`di/`, Phase 4): `AppContainer` reads `BuildConfig.USE_FAKE_TRANSPORT` and
-  picks the fake or real scanner/repository; `ThingyRepository` resolves a MAC address to a
-  controller (nav routes carry only primitives). Owned by `ThingyApplication`. Permission flow lives
-  in `ui/permissions/BlePermissions.kt`.
-- **Detail ViewModel** (`ui/detail/`, Phase 3): `ThingyConnectionViewModel` +
-  `ThingyDetailUiState`/`ConnectionState` — the iOS `ThingyConnection` port. 16 unit tests
-  (`ThingyConnectionViewModelTest` 10, `FakeThingyTransportTest` 6) run on the fake with no device.
-- **Scanner screen** (`ui/scanner/`, Phase 5): `ScannerViewModel` (dedupe by address + 1 s row
-  throttle, ported from iOS `handleDiscovery`), `ScannerScreen` (Nordic-blue `LargeTopAppBar`,
-  scanning spinner, `ContentUnavailableView`-equivalent empty state), `ThingyRow`. `MainActivity`
-  hosts the `NavHost` with `"scanner"` and `"detail/{deviceAddress}"`.
-- **Detail screen** (`ui/detail/`, Phases 6–7): `ThingyDetailScreen` with all four sections — LED,
-  Button, and the Environment/Motion dashboards gated on `hasEnvironmentData`/`hasMotionData` (any
-  field non-null, matching iOS). `SettingsSection` is the header/Card/footer container replacing
-  SwiftUI's inset-grouped `Section`; `SensorRow` renders one reading; `SensorFormat` holds the pure
-  formatters. **`SensorFormat` mirrors a cross-platform contract (plan §10 item 11) — don't change
-  one side alone**: locale-aware numbers, grouping suppressed everywhere (`1450 ppm`, never `1,450`),
-  and HALF_EVEN rounding. It formats via `NumberFormat`, *not* `String.format`, because
-  `java.util.Formatter` rounds HALF_UP and would render `-5.25` as `-5.3` where iOS gives `-5.2`.
-  `rememberHeavyImpactHaptic` fires on button press.
-  `ThingyConnectionViewModel.factory(repository, unknownDeviceName)` reads `deviceAddress` from
-  `SavedStateHandle`; an unresolvable address falls back to `UnavailableThingyController`, which
-  reports disconnected rather than hanging on "Scanning...".
-- **Strings + icons**: `res/values/strings.xml` holds all 30 keys from plan §8.2 with values verbatim
-  from the iOS `Localizable.strings`, and all **17** non-English locales are populated under
-  `values-<qualifier>/` (`zh-Hans`/`zh-Hant` use the BCP-47 `values-b+zh+Hans` form; `ja` and
-  `zh-Hant` were added upstream after the plan's §8.1 list was written, so enumerate the `.lproj`
-  dirs rather than trusting that list). Regenerate with `tools/gen_locales.py` — it transcribes
-  verbatim from the `.lproj` files, never machine-translates. One gap remains: the four
-  `ThingyOrientation` labels are hardcoded English in both codebases (plan §10 item 13) — don't
-  localize them on Android alone. Icons are **vendored
-  vector drawables**, not a Material Icons dependency — `rssi_1..4` are hand-drawn four-tier bars;
-  the rest (`ic_scanning`, `ic_lightbulb`, `ic_temperature`, …) are converted from the official
-  google/material-design-icons SVGs. `androidx.compose.material.icons` is deliberately not a
-  dependency (decoupled from material3; `material-icons-extended` is deprecated and huge).
-- Java/Kotlin target raised to **17**; BLE permissions + `bluetooth_le` feature added to the manifest.
+**Phases 0–10 are complete.** `./gradlew build` green: 62 JVM unit tests, lint 0 errors, all four
+variants. `./gradlew connectedMockDebugAndroidTest` green: 4 instrumented tests.
 
-Two non-obvious gotchas discovered while doing Phase 0 (both baked into the build files now):
+**The one substantive gap: the real BLE transport has never touched hardware.** `ThingyGatt`'s
+connect/discover/notify/read pipeline is written but entirely unproven — verifying it needs a
+physical Thingy:52 *and* a physical Android device, since the emulator has no BLE radio. Everything
+else is proven against the fake transport. Do not describe the `prod` flavor as working.
 
-- **AGP 9 has built-in Kotlin support** — applying the standalone `org.jetbrains.kotlin.android`
-  plugin is now a hard error ("no longer required since AGP 9.0"). Only the Compose compiler plugin
-  (`org.jetbrains.kotlin.plugin.compose`) is applied. Do not re-add `kotlin-android`.
-- **compileSdk is 37** (bumped from the plan's pinned 36 at the maintainer's request — an intentional
-  divergence from plan §2.3). The android-37 platform was not pre-installed; AGP auto-downloaded it
-  on first build (there is no command-line `sdkmanager` in this SDK). The AndroidX libraries are
-  still on the API-36-era line (core-ktx 1.17.0, lifecycle 2.9.4, compose-bom 2025.09.01,
-  activity-compose 1.10.1, navigation-compose 2.9.4); compileSdk 37 now **unblocks** the latest
-  (core-ktx 1.19, lifecycle 2.11, compose-bom 2026.x, activity-compose 1.13) whenever a bump is
-  wanted — they were downgraded only for the old 36 pin.
+Smaller open items live in plan §10: orientation labels hardcoded English on both platforms (item
+13), two untranslated accessibility strings, and the launcher icon still being the Android Studio
+template.
 
-Fixed config (do not re-decide): `minSdk = 24`, `targetSdk = 36`, `compileSdk = 37`, AGP `9.1.1`,
-Gradle `9.3.1`, Kotlin `2.2.20`, namespace/applicationId `com.armstrongmobile.nrfthingy52android`.
-This directory is **not a git repository** yet (plan §10.10).
+## Invariants — violating these breaks things quietly
 
-## Commands
+**Never mutate `uiState` outside the ViewModel's `events` collection.** Android's
+`BluetoothGattCallback`/`ScanCallback` fire on a Binder thread, unlike iOS's main-queue
+CoreBluetooth. The transport converts each callback to an immutable `ThingyGattEvent` on a
+`SharedFlow`; the single `viewModelScope.launch { controller.events.collect(…) }` is the concurrency
+boundary that replaces iOS's `@MainActor`. **There is no compiler enforcement.** Never call into
+Compose from the transport. (README has the sequence diagram; plan §4.1 has the rationale.)
 
-Single `:app` module, standard Gradle wrapper. Run from the repo root. Note the `mock`/`prod`
-product flavors: variant-specific tasks are named `{mock,prod}{Debug,Release}`, so use `installMockDebug`
-(there is no plain `installDebug`). Use the `mock` flavor for hardware-free dev.
+**`domain/` stays free of framework dependencies.** Only `java.util.UUID` and `kotlin.math`. This is
+what lets the wire-format tests run as plain JVM tests with fixtures copied verbatim from iOS. When a
+domain type needs a UI resource, do the lookup in the UI layer — the way `RssiBucket` maps to a
+drawable in `ThingyRow`, not in the enum. (This is the crux of plan §10 item 13.)
 
-The system JDK isn't on PATH; the build needs Java 17+. Use the Android Studio JBR:
-`export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`.
+**`ui/detail/SensorFormat.kt` is a cross-platform contract — don't change one side alone.**
+Locale-aware separators, grouping suppressed everywhere, HALF_EVEN rounding. Its header comment says
+*"DO NOT 'fix' the locale handling here"*; believe it. If the formatting genuinely must change, it
+changes on both platforms in the same pass.
 
-```bash
-./gradlew build                 # all 4 variants + lint + unit tests (the Phase 0 DoD command)
-./gradlew assembleMockDebug     # build the mock/debug APK only
-./gradlew test                  # JVM unit tests (app/src/test) — pure-Kotlin domain/ViewModel suite, all variants
-./gradlew testMockDebugUnitTest # unit tests for the mock/debug variant only (faster)
-./gradlew connectedMockDebugAndroidTest  # instrumented + Compose UI tests — needs a device/emulator
-./gradlew lint                  # Android lint
-./gradlew installMockDebug      # install the mock/debug build on a connected device/emulator
-```
+**No hardcoded colors in screen code.** Pull from `MaterialTheme.colorScheme` or add a token to
+`NordicColors`. Dynamic color is deliberately off to preserve branding.
 
-Run a single unit test class or method:
+**Localized values are transcribed, never machine-translated.** `tools/gen_locales.py` copies
+verbatim from the iOS `.lproj` files. `values/strings.xml` is *not* generated — the English source
+and the Android-only `cd_*` accessibility strings are hand-maintained.
 
-```bash
-./gradlew test --tests "com.armstrongmobile.nrfthingy52android.RssiBucketTest"
-./gradlew test --tests "*.ThingyEnvironmentTest.parsesTemperature"
-```
+**Parity divergences are decisions, not accidents.** If iOS and Android must differ, record it in
+plan §10 with the reasoning, and prefer landing the change on both platforms together. Several items
+there exist precisely because a unilateral "fix" would have made the two apps disagree.
 
-Per the plan's test split: pure domain logic and ViewModel tests (with the fake transport) run as
-JVM unit tests under `app/src/test/`; the fake-transport end-to-end suite and Compose UI tests
-(`createAndroidComposeRule<MainActivity>()`) run as instrumented tests under `app/src/androidTest/`.
+## Traps that cost real time
 
-## Architecture (the big picture the plan prescribes)
+**`String.format` rounds HALF_UP; `NumberFormat` rounds HALF_EVEN.** `java.util.Formatter` renders
+`-5.25` as `-5.3` where iOS gives `-5.2`. This is why `SensorFormat` uses `NumberFormat` and why
+`SensorFormatTest` asserts exactly `-5.25` and `271.5` — the only values where the modes diverge.
+A hand-off document once asserted the opposite; it was wrong, and only an empirical check caught it.
 
-Single-Activity Compose app, MVVM with `ViewModel` + `StateFlow` collected via
-`collectAsStateWithLifecycle()`. The parts that span multiple files and are easy to get wrong:
+**AGP 9 has built-in Kotlin support.** Applying `org.jetbrains.kotlin.android` is a hard error ("no
+longer required since AGP 9.0"). Only the Compose compiler plugin is applied. Do not re-add it.
 
-- **BLE callbacks arrive off the main thread.** Unlike iOS's CoreBluetooth (which delivers on the
-  main queue, letting the iOS models be `@MainActor`), Android's `BluetoothGattCallback`/
-  `ScanCallback` fire on an internal Binder thread. Rule (plan §4.1): the transport must never touch
-  Compose state — it converts each callback into a plain `ThingyGattEvent` pushed onto
-  `ThingyController.events`, and the `viewModelScope.launch { controller.events.collect(...) }` in
-  `ThingyConnectionViewModel.init` is the **only** place `uiState` is mutated. That single collection
-  point is the concurrency boundary replacing iOS's `@MainActor` isolation; there is no compiler
-  enforcement, so don't mutate state anywhere else. This is why the seam is an events flow rather
-  than the listener interface plan §3 names — see the §11 Phase 3 status note.
+**`BleManager` resists subclassing from Kotlin.** `isConnected()` is a Java method that doesn't
+satisfy a Kotlin `val`, and `disconnect()` is `final` returning a request object. `ThingyGatt`
+therefore **wraps** a private `ThingyBleManager` rather than extending it.
 
-- **Fake-vs-real BLE transport seam.** The `ThingyController` + `BleScanner` interfaces are
-  implemented by both a real transport and a `FakeThingyController`/`FakeBleScanner` test/demo double.
-  The real implementation is backed by **Nordic's `no.nordicsemi.android:ble` / `ble-ktx`** library
-  (decision resolved, plan §10.5), not raw `BluetoothGatt` — it provides the GATT operation queue,
-  CCCD/notification handling, and coroutine `suspend` request semantics that the raw API makes you
-  hand-roll (§4 points 7 & 9). This seam replaces the iOS app's CoreBluetoothMock and is the single
-  biggest structural divergence from iOS. Build the fake **before** the real transport (Phase 3
-  before Phase 4) so the scanner/detail/dashboard screens can be built and tested with no hardware.
-  Selection between fake and real (plan §10.6) uses **product flavors + lightweight DI**: the
-  `mock`/`prod` flavors expose `BuildConfig.USE_FAKE_TRANSPORT`, and a small composition-root DI seam
-  reads it to inject the right `ThingyController`/`BleScanner` (no Hilt/Koin — manual/constructor DI
-  in a single-module app).
+**`uiautomator` reports semantic text, not rendered text.** It cannot detect a visual ellipsis, so
+truncation must be checked from screenshots. Locale switches also need settle time — a stale dump
+once made `ja` appear to render Simplified Chinese.
 
-- **Navigation passes MAC addresses, not objects.** Navigation Compose routes carry only primitive
-  args, so `ThingyConnectionViewModel` receives a `deviceAddress: String` (via `SavedStateHandle`)
-  and looks the peripheral up through a repository — it does not get an object reference the way the
-  iOS `ThingyConnection(peripheral:)` does. The UI-layer `DiscoveredThingyUi` data class holds no
-  `BluetoothDevice`/controller reference (plan §3, §6.1).
+**Green build, broken pixels.** Two vendored icons rendered as solid black squares because the
+official Material SVGs carry a leading `M0,0h24v24H0V0z` bounding-box path. Build and tests were
+green; only viewing a screenshot found it. For anything visual, look at it.
 
-- **Domain layer is pure Kotlin, zero framework deps.** `ThingyEnvironment`/`ThingyMotion` objects
-  (UUID constants + pure `parse*`/`encode*` functions), `EnvironmentReading`/`MotionReading` sealed
-  interfaces, `TapDirection`/`ThingyOrientation`/`RssiBucket` enums — mirroring how the iOS
-  equivalents are framework-free and unit-tested in isolation.
+**Mirroring an SVG arc means reversing its endpoints, not negating x.** An elliptical-arc command
+has four candidate arcs for a given endpoint pair and radius; the large-arc and sweep flags pick
+one. The launcher icon's left arcs initially selected a wrong centre and bulged across the device.
+Nothing catches this but rendering — the build is green either way. (Plan §10 item 15.)
 
-## Open decisions
+**Grep translated terms, not English ones.** When correcting a translated string, searching for the
+English phrase finds nothing in 17 of 18 locales. Regenerating wholesale and diffing is more reliable
+than patching matched lines.
 
-Plan §10 flagged 10 decisions. Resolved so far: version triple (Kotlin 2.2.20 + Compose compiler
-plugin on AGP 9.1.1), Java target (17), compileSdk (bumped to 37, diverging from the plan's 36 pin),
-**BLE library — adopt Nordic `no.nordicsemi.android:ble`/`ble-ktx`** (not hand-rolled; wired in
-Phase 3/4), and **fake/real transport selection — `mock`/`prod` flavors + lightweight manual DI**.
-Still open: RSSI icon fidelity (redraw the custom bars vs. Material Symbols), Material Symbols vs.
-classic Material Icons for the `aqi` glyph, and git-repo initialization. The plan states its
-recommendation for each.
+**There is no plain `installDebug`.** Flavors make every variant task `{mock,prod}{Debug,Release}`.
+Use `mock` for anything hardware-free.
 
-## Build order
+## Working agreements
 
-Plan §11 defines 11 phases, each leaving the app building/working. **Phases 0–8 are done and
-verified**: `./gradlew build` green with **62 JVM unit tests**, plus **4 instrumented tests** green
-via `./gradlew connectedMockDebugAndroidTest`. **Phase 9 is half done** — all 16 locales are
-populated, but the hardware checklist is **pending for want of hardware**: it needs a physical
-Thingy:52 *and* a physical Android device, since the emulator has no BLE radio. So `ThingyGatt`'s
-connect/notify/read pipeline is still entirely unproven — treat the real transport as
-written-but-untested. Then Phase 10 docs (which includes rewriting this file).
+- **The maintainer stages, commits, and pushes.** Draft the commit message; don't run `git commit`
+  unless asked.
+- **Prefer the Edit tool over shell scripts for source edits.** Scripts are fine for genuinely bulk
+  mechanical transforms — `tools/gen_locales.py` is the sanctioned example.
+- **Phases start on explicit instruction** ("start Phase N"), and each leaves the app building.
+- **Verify claims before reporting them.** Several defects here were found only because a plausible
+  result was re-checked rather than accepted. Report what the command actually printed.
 
-Test layout: the 9-test `ThingyPipelineTest` runs as **plain JVM tests** (the fake transport and
-ViewModels are pure Kotlin, so no emulator or Robolectric), and needs no polling — the fake emits
-synchronously under `MainDispatcherRule`. Only `SensorDashboardsUiTest` needs a device; its three
-tests are `assumeTrue(BuildConfig.USE_FAKE_TRANSPORT)`-guarded so they skip cleanly on `prod`.
+## Fixed configuration — do not re-decide
 
-The mock build streams live demo readings (`ThingyMocks.startEnvironmentDemo`/`startMotionDemo`,
-launched from `ThingyApplication` when `USE_FAKE_TRANSPORT` and not under instrumentation). Phase 8
-tests should drive `ThingyMocks.controller` directly instead — the demos are suppressed under tests
-precisely so they don't fight the test's own values.
+`minSdk 24` · `targetSdk 36` · `compileSdk 37` · AGP `9.1.1` · Gradle `9.3.1` · Kotlin `2.2.20` ·
+namespace/applicationId `com.armstrongmobile.nrfthingy52android`.
 
-Phase 10 calls for rewriting this CLAUDE.md once real code exists, to document the architecture
-decisions actually made (especially the §10 resolutions) — replace this starter-state version at
-that point rather than layering onto it.
+compileSdk 37 is an intentional divergence from the plan's pinned 36, made at the maintainer's
+request; it is what allows the current AndroidX line. There is no command-line `sdkmanager` in this
+SDK — AGP auto-downloads platforms on first build.
+
+The system JDK isn't on `PATH`; export `JAVA_HOME` to the Android Studio JBR before building
+(see README).

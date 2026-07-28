@@ -63,7 +63,9 @@ adding the missing Kotlin plugin, adding Compose, replacing the View-based `Main
 - `nRFThingy52/CoreBluetoothTypeAliases.swift`, `MockThingy52.swift`
 - `nRFThingy52/Utilities/StringExtension.swift`, `UIColorExtension.swift`, `ColorExtension.swift`
 - `nRFThingy52/Utilities/en.lproj/Localizable.strings` (all 32 keys; confirmed all 16 locale
-  directories present)
+  directories present) — ⚠️ **a 2026-07-24 snapshot. It is now 18** (`ja` and `zh-Hant` were added
+  upstream), and "directories present" was never a check that the *values* were translated; 24 of 30
+  were English placeholders until 2026-07-26. See §10 items 12 and 14.
 - `nRFThingy52/Assets.xcassets/*` (full asset inventory, §7.2)
 - `nRFThingy52Tests/BLEModelTests.swift`, `ThingyIntegrationTests.swift`
 - `nRFThingy52UITests/nRFThingy52UITests.swift`
@@ -184,7 +186,7 @@ permission-model branches minSdk 24 must still support (pre-Android 12 vs. Andro
 | `.localized` (`String` extension over `NSLocalizedString`, used at non-`Text` call sites like inside `ThingyPeripheral`/`ScannerModel`) | Not needed as a Kotlin extension inside Composables — `stringResource(R.string.key)` resolves the active locale automatically, same as SwiftUI `Text("KEY")` auto-resolving through `Localizable.strings`. For non-Composable call sites (e.g., a fallback name built inside `ThingyGatt`, which has no `Context`), pass a `Context`/`Application` reference or a small resolver interface into the class at construction, since Android has no global `Bundle.main`-style locale accessor | Both frameworks build locale resolution into the UI-text primitive; the gap is only for code that resolves a string *outside* the Compose tree. |
 | `UIColorExtension.swift` (Nordic `UIColor` palette + `dynamicColor(light:dark:)` + hex helpers) | `object NordicColors` in `Color.kt` with the same named `androidx.compose.ui.graphics.Color` constants; light/dark handled by two `ColorScheme`s (`LightColorScheme`/`DarkColorScheme`) selected via `isSystemInDarkTheme()` in `ThingyTheme.kt` | Compose's `MaterialTheme` already has a first-class light/dark-scheme mechanism; no need to port `dynamicColor(light:dark:)` as a general helper. Keep a hex-parsing helper only if a non-Compose code path needs one (unlikely — flag as YAGNI unless a requirement surfaces). |
 | `ColorExtension.swift` (SwiftUI `Color` bridge over the same palette) | Folded into `NordicColors` directly — Android has no "UIKit vs SwiftUI color type" split, so no second bridging file is needed | Simplification, not a loss of fidelity. |
-| `Localizable.strings` × 16 locales | `res/values/strings.xml` + 15 `res/values-<qualifier>/strings.xml` | See §8 for the exact qualifier mapping per locale. |
+| `Localizable.strings` × 16 locales ⚠️ **now 18** | `res/values/strings.xml` + ~~15~~ **17** `res/values-<qualifier>/strings.xml` | See §8 for the exact qualifier mapping per locale. `ja` and `zh-Hant` were added upstream after this table was written. |
 | `Assets.xcassets` (`rssi_1`..`rssi_4`, `ic_lightbulb_outline_48pt`, `ic_radio_button_checked`, `scanning`, `splashscreen`, `AppIcon`) | `res/drawable/rssi_1.xml`..`rssi_4.xml` (vector drawables) + Material Icons for the lightbulb/radio-button/scanning/thermometer/humidity/gauge/aqi/rotate/walk/compass/tap glyphs (§7.3 substitution table) + the existing `mipmap-anydpi-v26` adaptive launcher icon (already present in the starter — restyle to Nordic branding, don't recreate the plumbing) + `androidx.core:core-splashscreen` for the splash | See §7.3 for the exact icon substitution table (SF Symbol / custom asset → Material Icons name). |
 | `nRFThingy52Tests/BLEModelTests.swift`, `ThingyIntegrationTests.swift` | JVM unit tests under `app/src/test/java/...`: `RssiBucketTest`, `ScannerViewModelHelperTest`, `ThingyEnvironmentTest`, `ThingyMotionTest`, `ThingyConnectionViewModelTest` + instrumented tests under `app/src/androidTest/java/...` for the fake-transport end-to-end suite | See §9.2 for a full test-by-test mapping. |
 | `nRFThingy52UITests/nRFThingy52UITests.swift` (`testSensorDashboardsShow`, `testLaunchPerformance`) | Compose UI tests under `app/src/androidTest/java/...` using `createAndroidComposeRule<MainActivity>()` | See §9.2. |
@@ -985,6 +987,43 @@ agent (or a human reviewer) should weigh:
     "coin cell" alone finds nothing in 17 of the 18 locales, so the check has to be run against the
     translated terms (`Knopfzelle`, `pila de botón`, `nappiparisto`, `батарейка-таблетка`, `纽扣电池`, …).
 
+15. **✅ RESOLVED — launcher icon design.** *(2026-07-28. §7.3 said only "restyle to Nordic branding,
+    don't recreate the plumbing" and left the mark itself unspecified.)*
+
+    **There was no iOS icon to port.** `nRFThingy52/Assets.xcassets/AppIcon.appiconset/` contains
+    `Contents.json` and no images — iOS never drew one. So this is an Android-original design rather
+    than a parity port, and **iOS is now the platform with the gap**; the design should be carried
+    back for visual parity.
+
+    **The mark:** the Thingy:52's squircle case with its round button, emitting symmetrically to left
+    and right, in white on a `nordicBlue → nordicLake` vertical gradient (both from `NordicColors`).
+
+    Two concepts were rendered at real launcher sizes and rejected **by looking at them**:
+
+    | Concept | Why rejected |
+    |---|---|
+    | Signal fan (dot + upward arcs) | Renders as the **Wi-Fi glyph**. Not merely generic — actively wrong for a Bluetooth app. This is why the shipped arcs are symmetric: a one-directional fan is what reads as Wi-Fi. |
+    | The Bluetooth rune | Legible and unambiguous, but collides with system settings UI, and the figuremark is a **Bluetooth SIG trademark** whose brand rules restrict app-icon use. Not worth the risk when a device-specific mark was available. |
+
+    An early Thingy-silhouette draft also broke the **safe zone** — content must stay inside the
+    centre 66dp of the 108dp viewport, and it was clipped by the circular mask. The shipped geometry
+    stays within radius ~31 of centre.
+
+    **Generated, not hand-drawn:** `tools/gen_launcher_icon.py` emits the adaptive vector layers *and*
+    the legacy raster mipmaps from one geometry. The rasters are **not optional** — `minSdk` is 24 and
+    adaptive icons only apply from API 26, so a vector-only change would have left API 24–25 devices
+    showing the green Android robot. Edit the constants there, never the XML.
+
+    **A trap worth recording,** caught by an independent verifier that re-derived the geometry from
+    the *generated XML* rather than trusting the generator: an SVG elliptical-arc command has **four
+    candidate arcs** for a given endpoint pair and radius (two centres × two directions), selected by
+    the large-arc and sweep flags. Emitting the left-hand arc with the same top-to-bottom endpoint
+    ordering as its right-hand mirror silently selects the arc centred at (18.78, 54) — bulging the
+    wrong way across the device — instead of the intended mirror centred at (54, 54). Mirroring an
+    arc requires **reversing the endpoint order**, not just negating the x offset. The raster pass was
+    correct throughout, so vector and raster would have shipped disagreeing with each other; the
+    build was green either way.
+
 ### Decision log (resolved during Phase 0 — 2026-07-24)
 
 Decisions taken against the open questions above, recorded here so the rationale isn't lost. Items
@@ -1077,9 +1116,12 @@ force the AndroidX question anyway and the placeholder app is the safest possibl
 
 ## 11. Phased Implementation Plan
 
-Each phase leaves the app building and (from Phase 4 onward) functional end-to-end against the
-fake transport, mirroring the disciplined incremental style of `SwiftUIMigrationPlan.md`. Resolve
-§10 items 1–6 before or during Phase 0.
+Eleven phases (0–10). Each leaves the app building and (from Phase 4 onward) functional end-to-end
+against the fake transport, mirroring the disciplined incremental style of `SwiftUIMigrationPlan.md`.
+Resolve §10 items 1–6 before or during Phase 0.
+
+**Status at 2026-07-28: Phases 0–8 and 10 complete; Phase 9 is half done** — localization landed, the
+hardware checklist and the launcher icon have not. Each phase below carries its own status callout.
 
 ### Phase 0 — Fix the starter project & make decisions
 
@@ -1409,8 +1451,10 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
 
 > **🟡 PARTIALLY COMPLETE (2026-07-26).**
 >
-> **✅ Localization done.** All 15 non-English `values-*/strings.xml` files exist, transcribed verbatim
-> from the corresponding iOS `.lproj/Localizable.strings` (never machine-translated). Qualifiers per
+> **✅ Localization done.** All **17** non-English `values-*/strings.xml` files exist, transcribed
+> verbatim from the corresponding iOS `.lproj/Localizable.strings` (never machine-translated).
+> *(Originally written as 15, before `ja` and `zh-Hant` were added upstream — see §6.1 of the iOS
+> hand-off. Enumerate the `.lproj` dirs rather than trusting any count written here.)* Qualifiers per
 > §8.1, with `zh-Hans` using the modern BCP-47 form `values-b+zh+Hans` rather than the legacy
 > `values-zh-rCN`, so it also matches zh-Hans-SG. `./gradlew build` green, **lint 0 errors**.
 > Verified on device with a de-DE app locale: `AUS`, `LOSGELASSEN`, `23,4 °C`.
@@ -1427,8 +1471,10 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
 >   reads `PÄÄLLÄ`/`POIS` (not the withdrawn `SYTYTÄ`/`SAMMUTA`), and `LED` is spelled out only in
 >   non-Latin scripts (`Светодиод`, `Світлодіод`, `एलईडी`, `LED 灯`, `LED 燈`, `Đèn LED`).
 > - §6.3 the empty-state truncation bug → **does not reproduce on Android.** The exact strings they
->   cite render in full: de "2. Stellen Sie sicher, dass die Knopfzelle geladen ist." and ru
->   "2. Убедитесь, что батарейка-таблетка заряжена." Compose's `Text` defaults to unbounded
+>   cited rendered in full: de "2. Stellen Sie sicher, dass die Knopfzelle geladen ist." and ru
+>   "2. Убедитесь, что батарейка-таблетка заряжена." *(Both were later replaced by the §10 item 14
+>   coin-cell correction; quoted here as the strings actually tested at the time. The replacements are
+>   shorter, so the finding still holds.)* Compose's `Text` defaults to unbounded
 >   `maxLines` and the empty state's `Column` imposes no height constraint, so the trap they hit does
 >   not exist here. Verified **visually from screenshots**, because `uiautomator` reports the semantic
 >   string rather than the rendered one and would not reveal a visual ellipsis.
@@ -1445,9 +1491,48 @@ fake transport, mirroring the disciplined incremental style of `SwiftUIMigration
   LED toggle with read-back, button press/haptic, environment/motion dashboards populating,
   disconnect/reconnect, Bluetooth-off handling, a failed-connection scenario — mirroring the iOS
   project's `nRFThingy52BLEStatus.md` §9/§13/§14 hardware checklists item-for-item.
-- Full 16-locale `strings.xml` population (§8.2) with real translated text pulled from each iOS
-  `.lproj` file, not machine translation.
-- Restyle the existing adaptive launcher icon (§7.3) with Nordic branding.
+- ✅ Full **18**-locale `strings.xml` population (§8.2) with real translated text pulled from each iOS
+  `.lproj` file, not machine translation. *(Done — this is the completed half of Phase 9.)*
+- ✅ Restyle the existing adaptive launcher icon (§7.3) with Nordic branding. *(Done 2026-07-28 —
+  the one Phase 9 item that was never hardware-blocked. Design rationale and the two rejected
+  concepts are recorded as §10 item 15.)*
 - **Definition of done:** feature-complete parity with the iOS app as of 2026-07-22 (through the
-  Motion dashboard), verified on real hardware, localized in all 16 languages, matching the
+  Motion dashboard), verified on real hardware, localized in all 18 languages, matching the
   visual brand.
+
+### Phase 10 — Documentation
+
+> **✅ COMPLETE (2026-07-28).**
+>
+> **⚠️ This section was lost in the 2026-07-24 regeneration and is restored here.** §11 ran 0–9 while
+> the rest of the repo — this file's own §11 preamble, and `CLAUDE.md`'s build-order note — referred
+> to "11 phases" and to "Phase 10 docs". Same failure mode as §10 item 13, which vanished the same
+> way. Scope below was reconstructed from `CLAUDE.md`'s surviving description ("rewriting this
+> CLAUDE.md once real code exists, to document the architecture decisions actually made"). **If
+> something else was in the original Phase 10, it is gone and no one noticed for four days** — worth
+> assuming the same about any other section that feels thin.
+
+- **`README.md` (new).** The document the repo never had: what the app is, build/run with the flavor
+  split, architecture, GATT profile table, testing layout, localization, known gaps, toolchain.
+  Mermaid diagrams for the screen flow, the module graph, the off-main-thread event path, and the
+  test split — the event-path sequence diagram in particular says in one picture what §4.1 needs
+  three paragraphs for.
+- **`CLAUDE.md` rewritten, not extended.** The old file was a Phase-0 status snapshot that had been
+  layered onto for nine phases; most of it duplicated what the code and README now say. Replaced with
+  what an agent needs *beyond* the README: the two reference documents and their known defects, the
+  invariants that break things quietly, the traps that cost real debugging time, and the working
+  agreements. Deliberately excludes anything re-derivable from the source.
+- **Division of labor between the three documents**, so they don't rot into three copies of the same
+  thing: this plan is the *spec and decision record* (why, and what was decided), the README is the
+  *orientation for a human* (what it is, how to run it), `CLAUDE.md` is the *operating manual for an
+  agent* (what not to break). Facts live in exactly one of them and are cross-referenced from the
+  others.
+
+**Honest-status rule applied throughout:** all three documents state plainly and prominently that
+the real BLE transport has never touched hardware. It would have been easy to let "62 tests green"
+imply a working `prod` build; the README's status table, `CLAUDE.md`'s status section, and Phase 9
+above all say the opposite explicitly.
+
+- **Definition of done:** a newcomer can build and run the app from the README alone; an agent can
+  pick up work from `CLAUDE.md` without re-reading the whole plan; no document overstates what has
+  been verified.
