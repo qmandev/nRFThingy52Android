@@ -2,7 +2,7 @@
 <!-- nb: transcribed verbatim from the iOS nb.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 33 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">Sanntids sensoravlesninger strømmet fra Thingy.</string>
     <string name="motion">Bevegelse</string>
     <string name="orientation">Orientering</string>
+    <string name="orientation_portrait">Stående</string>
+    <string name="orientation_landscape">Liggende</string>
+    <string name="orientation_portrait_upside_down">Stående (opp ned)</string>
+    <string name="orientation_landscape_upside_down">Liggende (opp ned)</string>
     <string name="steps">Skritt</string>
     <string name="heading">Retning</string>
     <string name="last_tap">Siste trykk</string>

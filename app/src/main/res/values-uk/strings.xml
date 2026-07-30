@@ -2,7 +2,7 @@
 <!-- uk: transcribed verbatim from the iOS uk.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 34 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">Показники датчиків, що передаються з Thingy у реальному часі.</string>
     <string name="motion">Рух</string>
     <string name="orientation">Орієнтація</string>
+    <string name="orientation_portrait">Портретна</string>
+    <string name="orientation_landscape">Альбомна</string>
+    <string name="orientation_portrait_upside_down">Портретна (перевернута)</string>
+    <string name="orientation_landscape_upside_down">Альбомна (перевернута)</string>
     <string name="steps">Кроки</string>
     <string name="heading">Курс</string>
     <string name="last_tap">Останній дотик</string>

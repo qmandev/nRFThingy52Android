@@ -2,7 +2,7 @@
 <!-- fr: transcribed verbatim from the iOS fr.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 26 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 29 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">Relevés de capteurs en direct transmis par le Thingy.</string>
     <string name="motion">Mouvement</string>
     <string name="orientation">Orientation</string>
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_landscape">Paysage</string>
+    <string name="orientation_portrait_upside_down">Portrait (à l\'envers)</string>
+    <string name="orientation_landscape_upside_down">Paysage (à l\'envers)</string>
     <string name="steps">Pas</string>
     <string name="heading">Cap</string>
     <string name="last_tap">Dernière tape</string>

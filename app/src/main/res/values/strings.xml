@@ -41,6 +41,14 @@
     <!-- Detail: motion dashboard -->
     <string name="motion">Motion</string>
     <string name="orientation">Orientation</string>
+    <!-- Orientation *values*. Each locale uses its platform's established device-orientation
+         vocabulary rather than a literal translation of the English pair (de Hochformat/Querformat,
+         pt-BR Retrato/Paisagem). Cross-platform contract — iOS holds the same values under the keys
+         "Portrait", "Landscape", … ; don't change one side alone. Plan §10 item 13. -->
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_landscape">Landscape</string>
+    <string name="orientation_portrait_upside_down">Portrait (upside down)</string>
+    <string name="orientation_landscape_upside_down">Landscape (upside down)</string>
     <string name="steps">Steps</string>
     <string name="heading">Heading</string>
     <string name="last_tap">Last Tap</string>

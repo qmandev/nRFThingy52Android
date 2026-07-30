@@ -1,7 +1,6 @@
 package com.armstrongmobile.nrfthingy52android.ui.detail
 
 import com.armstrongmobile.nrfthingy52android.domain.TapDirection
-import com.armstrongmobile.nrfthingy52android.domain.ThingyOrientation
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -40,10 +39,12 @@ class SensorFormatTest {
         assertNull(SensorFormat.airQuality(null, 34))
     }
 
+    // Orientation is no longer formatted here — its four labels became localized string resources
+    // (plan §10 item 13), so they are resolved at the call site via ThingyOrientation.labelRes.
+    // Resource lookup needs a Context, so the mapping is covered by OrientationLabelTest in
+    // androidTest rather than being asserted on a raw String here.
     @Test
-    fun orientationAndStepsUseRawLabels() {
-        assertEquals("Portrait (upside down)", SensorFormat.orientation(ThingyOrientation.REVERSE_PORTRAIT))
-        assertNull(SensorFormat.orientation(null))
+    fun stepsAreUnformattedIntegers() {
         assertEquals("1234", SensorFormat.steps(1234, enUS))
         assertNull(SensorFormat.steps(null))
     }

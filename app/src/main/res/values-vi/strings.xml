@@ -2,7 +2,7 @@
 <!-- vi: transcribed verbatim from the iOS vi.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 34 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">Số liệu cảm biến trực tiếp truyền từ Thingy.</string>
     <string name="motion">Chuyển động</string>
     <string name="orientation">Hướng đặt</string>
+    <string name="orientation_portrait">Dọc</string>
+    <string name="orientation_landscape">Ngang</string>
+    <string name="orientation_portrait_upside_down">Dọc (lộn ngược)</string>
+    <string name="orientation_landscape_upside_down">Ngang (lộn ngược)</string>
     <string name="steps">Số bước</string>
     <string name="heading">Phương hướng</string>
     <string name="last_tap">Lần chạm cuối</string>

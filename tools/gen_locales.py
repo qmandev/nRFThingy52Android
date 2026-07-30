@@ -43,6 +43,13 @@ MAPPING = [
     ("Live sensor readings streamed from the Thingy.", "environment_section_footer"),
     ("Motion", "motion"),
     ("Orientation", "orientation"),
+    # Orientation *values*, localized 2026-07-28 (plan §10 item 13). On iOS these live in
+    # ThingyOrientation.labelKey and the English sentence is the lookup key, per that app's
+    # convention; the Android resource names below are ours to choose, only the values are shared.
+    ("Portrait", "orientation_portrait"),
+    ("Landscape", "orientation_landscape"),
+    ("Portrait (upside down)", "orientation_portrait_upside_down"),
+    ("Landscape (upside down)", "orientation_landscape_upside_down"),
     ("Steps", "steps"),
     ("Heading", "heading"),
     ("Last Tap", "last_tap"),

@@ -2,7 +2,7 @@
 <!-- zh-Hans: transcribed verbatim from the iOS zh-Hans.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 30 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 34 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">从 Thingy 实时传输的传感器读数。</string>
     <string name="motion">运动</string>
     <string name="orientation">方向</string>
+    <string name="orientation_portrait">竖向</string>
+    <string name="orientation_landscape">横向</string>
+    <string name="orientation_portrait_upside_down">竖向（倒置）</string>
+    <string name="orientation_landscape_upside_down">横向（倒置）</string>
     <string name="steps">步数</string>
     <string name="heading">航向</string>
     <string name="last_tap">最近轻点</string>

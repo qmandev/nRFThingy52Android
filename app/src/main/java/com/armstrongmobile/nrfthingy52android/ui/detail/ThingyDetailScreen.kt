@@ -144,7 +144,7 @@ private fun MotionSection(uiState: ThingyDetailUiState) {
         SensorRow(
             icon = R.drawable.ic_orientation,
             label = stringResource(R.string.orientation),
-            value = SensorFormat.orientation(uiState.orientation),
+            value = uiState.orientation?.let { stringResource(it.labelRes) },
         )
         SensorRow(
             icon = R.drawable.ic_steps,

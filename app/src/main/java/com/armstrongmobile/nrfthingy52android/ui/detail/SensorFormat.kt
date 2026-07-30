@@ -1,7 +1,6 @@
 package com.armstrongmobile.nrfthingy52android.ui.detail
 
 import com.armstrongmobile.nrfthingy52android.domain.TapDirection
-import com.armstrongmobile.nrfthingy52android.domain.ThingyOrientation
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
@@ -47,7 +46,10 @@ object SensorFormat {
         return "${integer(eco2, locale)} ppm · ${integer(tvoc, locale)} ppb"
     }
 
-    fun orientation(orientation: ThingyOrientation?): String? = orientation?.label
+    // No orientation() here any more: the four labels are localized as of 2026-07-28, so they are
+    // resolved from resources at the call site via ThingyOrientation.labelRes (OrientationLabel.kt).
+    // Everything else in this object is a pure String transform with no resource lookup, and keeping
+    // it that way is what lets SensorFormatTest run as a plain JVM test.
 
     fun steps(stepCount: Int?, locale: Locale = Locale.getDefault()): String? =
         stepCount?.let { integer(it, locale) }

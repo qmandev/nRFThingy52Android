@@ -249,7 +249,7 @@ launched by `ThingyApplication` — but **suppressed under instrumentation**, so
 
 ## Localization
 
-30 string keys across **English + 17 locales**: `de es fi fr it ja ko mr nb pl pt-BR ro ru uk vi
+34 string keys across **English + 17 locales**: `de es fi fr it ja ko mr nb pl pt-BR ro ru uk vi
 zh-Hans zh-Hant`.
 
 Values are **transcribed verbatim from the iOS `.lproj` files, never machine-translated**. Regenerate
@@ -284,8 +284,8 @@ half-way values, because that's the only place the two modes diverge.
 | Gap | Why it's still open |
 |---|---|
 | **Hardware verification** | Needs a physical Thingy:52 + Android device. Blocks nothing else. |
-| **Orientation labels are hardcoded English** | `"Portrait"` / `"Landscape"` live as literals in the enums on *both* platforms. Android's own `framework-res` uses "Vertical"/"Horizontal" in Spanish and "Hochformat"/"Querformat" in German, so leaving English is wrong in es/de/it/pt — but it must be fixed on both platforms at once, or the two apps disagree. |
-| **Two accessibility strings untranslated** | `cd_signal_strength`, `cd_scanning` are Android-only, so there's no iOS string to transcribe. Bundle with the item above. |
+| **Two accessibility strings untranslated** | `cd_signal_strength`, `cd_scanning` are Android-only, so there's no iOS string to transcribe — iOS confirmed it has no counterpart to give. |
+| **Orientation reads `—` on real hardware until the device moves** | The orientation characteristic is notify-on-change and neither platform issues an initial read. Arguably correct; noted so it isn't filed as a bug during hardware verification. |
 | **iOS has no app icon** | Android now has one; `AppIcon.appiconset` on iOS holds only `Contents.json`. Porting this design across would restore visual parity. |
 | **Font-scale / multi-density testing** | Deliberately deferred on both platforms to the production release cycle. |
 

@@ -911,7 +911,12 @@ agent (or a human reviewer) should weigh:
     reviewed. **See also item 13, which this pass did *not* close** — the four `ThingyOrientation`
     labels remain hardcoded English in both codebases.
 
-13. **⚠️ OPEN — the four orientation labels are hardcoded English, not localized, on both platforms.**
+13. **✅ RESOLVED 2026-07-28 — the four orientation labels are now localized on both platforms.**
+    *(Landed as iOS `8cd9bda` + Android's matching commit. The original OPEN write-up follows, kept
+    because its terminology research is what the translations were built on. Resolution at the end.)*
+
+    ⚠️ *Original finding —* **the four orientation labels are hardcoded English, not localized, on
+    both platforms.**
     *(Surfaced 2026-07-26 while verifying the new translations on device: with a Spanish locale the
     dashboard correctly reads "Orientación", but its **value** reads "Portrait".)*
 
@@ -961,6 +966,56 @@ agent (or a human reviewer) should weigh:
     **Historical note:** the pre-regeneration version of this plan tracked this as its own §10 item;
     the entry was lost when the file was reconstructed on 2026-07-24, which is why it resurfaced only
     on visual inspection. Re-recorded here.
+
+    ---
+
+    ### ✅ Resolution (2026-07-28)
+
+    **Terminology.** iOS commissioned all 68 values (4 labels × 17 non-English locales) using each
+    platform's established *device*-orientation vocabulary, exactly as the research above prescribed:
+    `de` Hochformat/Querformat, `es` Vertical/Horizontal, `it` Verticale/Orizzontale, `pt-BR`
+    Retrato/Paisagem. The prediction that **`fr` would be the one locale whose English reads correctly
+    held** — it is the only one of the 17 where `Portrait` is unchanged, which is visible in
+    `gen_locales.py`'s same-as-English report.
+
+    **One deliberate divergence from the table above, in `ru`.** The framework-res pair quoted here is
+    Книжная/Альбомная — literally "book"/"album", correct for *paper* sizes, which is what that
+    resource describes. These labels describe a puck on a desk, so iOS used **Портретная/Альбомная**,
+    matching Apple's device-orientation vocabulary. Accepted rather than contested: the two platforms
+    matching each other matters more than each matching its own OS, and the framework-res evidence was
+    always about *device* orientation by analogy, never a direct citation.
+
+    **Structure, on both sides.** The clean approach above was taken. Android's enum dropped its
+    `label` entirely and the lookup moved to `ui/detail/OrientationLabel.kt` as
+    `ThingyOrientation.labelRes`; iOS's `label` became `labelKey`, resolved by the view.
+    **`domain/` keeps its zero-framework-dependency property**, and `ThingyMotion.swift` still imports
+    only `Foundation`. `SensorFormat.orientation()` was deleted rather than made resource-aware, which
+    keeps `SensorFormatTest` a pure JVM test.
+
+    **Verification.** All 68 transcribed values were diffed against the iOS reply's table
+    programmatically — 68/68 exact. Confirmed on device in Spanish: "Orientación" now reads
+    "Horizontal (invertido)" where it previously read "Landscape (upside down)". `OrientationLabelTest`
+    (4 instrumented cases) pins the en/es/de values so the mapping can't silently regress.
+
+    **Two bugs this surfaced, neither related to localization:**
+
+    - *On iOS:* their Orientation row had **never populated at all** — motion characteristics are
+      notify-only with no initial read, and their demo emitted orientation once at launch, before the
+      detail screen subscribes. Empty since the motion dashboard shipped; two screenshot passes
+      photographed it and nobody noticed, because an em-dash reads as "no reading yet". **Android was
+      already immune**: `ThingyMocks` re-emits orientation every tick, a deliberate demo-only
+      divergence introduced in Phase 7 for exactly this reason.
+    - *On Android:* the localized values are the first readings long enough to wrap, which exposed two
+      `SensorRow` layout faults invisible in English — wrapped values fell back to start-alignment
+      instead of matching the right-aligned column, and the `weight(1f)` spacer collapsed to zero so
+      `ru` "Альбомная (перевёрнутая)" touched its label. Fixed with `textAlign = TextAlign.End` and a
+      16dp start padding.
+
+    **Still open, deliberately:** `ThingyGatt` subscribes to the orientation characteristic with **no
+    initial read** (`ThingyGatt.kt`, `motionCharacteristics.forEach`), matching iOS. On real hardware
+    the row therefore reads `—` until the device is physically moved, because the characteristic
+    notifies on change. Arguably correct, but **both platforms should expect it during hardware
+    verification rather than filing it as a bug.**
 
 14. **✅ RESOLVED — the empty-state help text described a battery the Thingy:52 does not have.**
     *(Reported by the iOS session 2026-07-28 as §7 of `IOS_TASK_localize_readings_REPLY.md`, after

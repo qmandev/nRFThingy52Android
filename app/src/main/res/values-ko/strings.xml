@@ -2,7 +2,7 @@
 <!-- ko: transcribed verbatim from the iOS ko.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 33 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">Thingy에서 실시간으로 전송되는 센서 측정값입니다.</string>
     <string name="motion">모션</string>
     <string name="orientation">방향</string>
+    <string name="orientation_portrait">세로</string>
+    <string name="orientation_landscape">가로</string>
+    <string name="orientation_portrait_upside_down">세로(뒤집힘)</string>
+    <string name="orientation_landscape_upside_down">가로(뒤집힘)</string>
     <string name="steps">걸음 수</string>
     <string name="heading">방위</string>
     <string name="last_tap">마지막 탭</string>

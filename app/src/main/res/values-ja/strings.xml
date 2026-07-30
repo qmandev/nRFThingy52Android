@@ -2,7 +2,7 @@
 <!-- ja: transcribed verbatim from the iOS ja.lproj/Localizable.strings
      (plan §8.2). Not machine-translated.
 
-     COVERAGE: 29 of 30 values differ from English. Any that match are genuine
+     COVERAGE: 33 of 34 values differ from English. Any that match are genuine
      translations that coincide with the English word — "LED" is LED in most languages —
      not untranslated placeholders. (That was not true before 2026-07-26: 24 strings were
      English placeholders upstream until the iOS translation pass landed. See plan
@@ -37,6 +37,10 @@
     <string name="environment_section_footer">Thingy からリアルタイムで送信されるセンサーの測定値です。</string>
     <string name="motion">モーション</string>
     <string name="orientation">向き</string>
+    <string name="orientation_portrait">縦向き</string>
+    <string name="orientation_landscape">横向き</string>
+    <string name="orientation_portrait_upside_down">縦向き（上下逆）</string>
+    <string name="orientation_landscape_upside_down">横向き（上下逆）</string>
     <string name="steps">歩数</string>
     <string name="heading">方位</string>
     <string name="last_tap">最後のタップ</string>
